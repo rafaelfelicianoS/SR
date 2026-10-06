@@ -1,0 +1,21 @@
+# LaTeX build artefacts
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.bbl
+*.blg
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.pdf
+*.dvi
+*.ps
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
