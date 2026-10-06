@@ -290,18 +290,45 @@ design principles introduced in RS-S01.
 \label{tab:principles}
 \begin{tabularx}{\textwidth}{lXcX}
 \toprule
-\textbf{\#} & \textbf{Principle} & \textbf{H/V} & \textbf{Notes / Mitigation} \\
+\textbf{\#} & \textbf{Principle} & \textbf{H/V} & \textbf{Justification / Mitigation} \\
 \midrule
-1 & Least Privilege & H & Each API role exposes only the minimum set of endpoints required. \\
-2 & Defence in Depth & H & TLS + certificate pinning + API gateway + SIEM: multiple independent layers. \\
-3 & Fail Securely & H & Authentication failures return generic errors; no information leakage. \\
-4 & Separation of Concerns & H & Payment logic, auth, and notification modules are independently deployable. \\
-5 & Economy of Mechanism & V & MB~WAY integration adds complexity; attack surface review required. \textit{Mitigation: scope MB~WAY integration to a dedicated microservice with strict API contract.} \\
-6 & Open Design & H & Cryptographic algorithms (AES-256-GCM, RSA-4096) are standard and published. \\
-7 & Complete Mediation & V & Some legacy internal endpoints bypass the API gateway. \textit{Mitigation: enforce gateway routing for all endpoints before release; add gateway integration test.} \\
-8 & Psychological Acceptability & V & SCA friction (biometric + OTP) may prompt users to disable security features. \textit{Mitigation: UX study to optimise authentication flow; risk-based step-up auth.} \\
-9 & Least Common Mechanism & H & Customer and admin channels use separate API surfaces and auth stacks. \\
-10 & Accountability / Auditability & H & All privileged operations generate signed, non-repudiable audit events (NFR-SEC-01). \\
+1 & Least Privilege & H &
+  A regular user has no access to user management and cannot freeze or delete other accounts.
+  An admin cannot initiate transfers or manage a user's account directly. \\
+2 & Fail-safe Defaults & H &
+  Failed login denies access. A failed transfer is automatically cancelled and never processed. \\
+3 & Economy of Mechanism & H &
+  A centralised permission manager serves both the mobile app and desktop interfaces,
+  providing a single authoritative access-control point. \\
+4 & Complete Mediation & \textbf{V} &
+  Login credentials are cached; the user is not re-authenticated on every session entry.
+  \textit{Mitigation: introduce a 4-digit PIN for fast re-authentication; enforce session
+  timeout after 15~min of inactivity; require MFA only for high-value operations such
+  as large transfers.} \\
+5 & Open Design & H &
+  Even knowing the bank's internal security architecture, an attacker cannot access a
+  user account without the correct password/PIN. Security relies on key secrecy, not
+  obscurity. \\
+6 & Separation of Privilege & H &
+  Large transfers and account creation require MFA. An admin freezing an account must
+  obtain confirmation from a supervisor or a second admin. \\
+7 & Least Common Mechanism & \textbf{V} &
+  All data is stored on a single global server instead of region-isolated servers,
+  creating a single point of failure and shared-risk exposure.
+  \textit{Mitigation: partition critical-data components; isolate internal services;
+  deploy independent regional storage for sensitive data.} \\
+8 & Psychological Acceptability & \textbf{V} &
+  Users reject frequent MFA prompts, mandatory login on every app launch, and
+  rapidly expiring session tokens, which they consider overly intrusive.
+  \textit{Mitigation: 4-digit PIN instead of a complex password; reasonable session
+  duration with silent renewal; step-up MFA only when genuinely necessary.} \\
+9 & Defence in Depth & H &
+  Multiple independent layers: password, MFA via email/SMS, session tokens with
+  expiry, and a bank-issued verification matrix for account creation or confirmation. \\
+10 & Fail Securely & H &
+  An error during a loan request displays only a generic message (``action could not
+  be completed''); no technical details are exposed that could be exploited to bypass
+  interest calculations or other business rules. \\
 \bottomrule
 \end{tabularx}
 \end{table*}
@@ -321,10 +348,11 @@ banking application, mapping concrete security activities to each phase from tra
 to operations, drawing on the NIST~SSDF and OWASP~SAMM frameworks. Three quality
 attributes -- Security, Availability, and Integrity -- were selected as the most
 critical for this domain, yielding six measurable NFRs that will seed the requirements
-catalogue in the next exercise. The three most significant design violations identified
-concern the economy of mechanism (MB~WAY integration complexity), incomplete mediation
-(legacy internal endpoints), and psychological acceptability (SCA friction). Mitigations
-for each have been defined at the design and requirements level.
+catalogue in the next exercise. The three most significant design violations identified are: incomplete mediation
+(login credentials cached across sessions), least common mechanism (single global
+server with no regional isolation), and psychological acceptability (users rejecting
+frequent MFA and short session timeouts). Mitigations for each have been defined at
+the design and requirements level and will seed the requirements catalogue in Exercise~2.
 
 % ---------------------------------------------------------------
 % REFERENCES
