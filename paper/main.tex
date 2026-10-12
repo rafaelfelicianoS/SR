@@ -145,6 +145,17 @@ mandating the Secure by Default principle.
 
 % TODO: diz que vais aplicar SSDL fase a fase, usando NIST SSDF como referência principal
 
+The system considered for in this paper is a mobile application for a Portuguese retail
+bank. It provides customers with the essencial banking services, including SEPA and
+instant bank transfers, MB~WAY payments, card managements (freezing, setting spending
+limits, changing PINs), and access to account statements and transaction history.
+The application interacts with three main external interfaces: the bank's core banking
+system via an internal REST~API, the MB~WAY interoperability network, and the Portuguese
+national payment scheme (Multibanco/SIBS). Two categories of users were considered:
+customers, who access the banking services and manage their own accounts, and system
+administrators, who execute system managing tasks that are subjected to a role based
+access control.
+
 This paper applies a Secure Software Development Lifecycle (SSDL) to the mobile
 banking application, mapping security activities to each development phase following
 the NIST Secure Software Development Framework (SSDF, SP~800-218)~\cite{nist_ssdf}
