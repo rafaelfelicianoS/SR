@@ -67,7 +67,7 @@
 %  security requirements (NFRs), and identify the three riskiest design
 %  violations with their mitigations. Results show that ..."
 This paper presents a secure online banking application for a Portuguese retail bank,
-that provides financial services such as money transfers, MB WAY payments and card controls.
+that provides financial services such as money transfers, MB~WAY payments and card controls.
 This solution aims to address reliability, robustness and security, by integrating
 security practices from the Secure Software Development Lifecycle (SSDL).
 The development approach was guided and is aligned with the NIST Secure Software Development
@@ -118,8 +118,28 @@ Protection Regulation (GDPR). PSD2 mandates Strong Customer Authentication (SCA)
 all payment transactions, while DORA requires financial entities to demonstrate
 operational resilience and incident response capability. Given the high value of
 financial assets and sensitive personal data handled, such applications face a broad
-threat landscape including credential stuffing, phishing, man-in-the-middle attacks,
-and API abuse.
+threat landscape including credential stuffing, in which the attackers try usernames and
+passwords leaked from other services, phishing, where the users are tricked by fraudsters
+into revealing credentials or authentication codes through a variaty of methods, such as
+fake websites, SMS or phone calls, man-in-the-middle attacks, where an attacker attempts
+to intercept or manipulate communications between two parties, allowing attackers to
+steal credentials or execute unauthorised actions to, and, finally, API abuse, where
+attackers exploit backend weaknesses to do a variaty of different outcomes, such as
+steal personal information, execute admin actions and much more.
+
+With the introduction of the Cyber Resilience Act (CRA), most companies, specifically
+those that handle critical infrastructure (such as banks) and personal information,
+are required to include security into planning, design, development and maintenance
+of their digital products. Companies are now mandated, by law, to maintain a Software
+Bill of Materials (SBOM), which boils down to being a list of all the third-party
+software components and dependencies that the service is dependent on, as well as their
+versions. The SBOM helps companies identify quicker vulnerable third-party libraries.
+CRA regulation also mandates that companies need to shift from a reactive mindset to a
+proactive, continuous monitoring structure, where the companies need to handle
+vulnerabilities, where they need to detect, manage, patch and report security flaws
+in their products during its expected lifecycle. Additionally, CRA dictates that products
+must be delivered to the end user with the most secure configurations alread activated,
+mandating the Secure by Default principle.
 
 \subsection{Scope and Approach}
 
