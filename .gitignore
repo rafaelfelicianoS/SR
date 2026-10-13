@@ -19,3 +19,6 @@
 
 # macOS
 .DS_Store
+
+# Figures included by the paper
+!paper/figures/*.pdf

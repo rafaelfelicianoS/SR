@@ -1,8 +1,6 @@
 \documentclass[conference,a4paper]{IEEEtran}
+\IEEEoverridecommandlockouts
 
-% ---------------------------------------------------------------
-% Packages
-% ---------------------------------------------------------------
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{cite}
@@ -10,62 +8,34 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
-\usepackage{hyperref}
 \usepackage{booktabs}
-\usepackage{array}
 \usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage[hidelinks]{hyperref}
+\usepackage[nohyperlinks]{acronym}
 
-% ---------------------------------------------------------------
-% Title & Authors  — PREENCHER PELO GRUPO
-% ---------------------------------------------------------------
-\title{Secure Software Lifecycle for a Portuguese Mobile Banking Application}
+\graphicspath{{figures/}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 
-\author{
-  \IEEEauthorblockN{Rafael Feliciano Soares}
-  \IEEEauthorblockA{\textit{Mestrado em Cibersegurança}\\
-    Universidade de Aveiro, Portugal\\
-    rafael@ua.pt}
-  \and
-  \IEEEauthorblockN{Guilherme Almiro Viana\\ Fernandes Tavares}
-  \IEEEauthorblockA{\textit{Mestrado em Cibersegurança}\\
-    Universidade de Aveiro, Portugal\\
-    gavftavares@ua.pt}
-  \and
-  \IEEEauthorblockN{Francisco Antunes dos Reis}
-  \IEEEauthorblockA{\textit{Mestrado em Cibersegurança}\\
-    Universidade de Aveiro, Portugal\\
-    franciscoareis@ua.pt}
-  \and
-  \IEEEauthorblockN{Pedro Miguel Paulo Martins}
-  \IEEEauthorblockA{\textit{Mestrado em Cibersegurança}\\
-    Universidade de Aveiro, Portugal\\
-    pedropmartins@ua.pt}
-  \and
-  \IEEEauthorblockN{Pedro Miguel \\dos Santos Marques}
-  \IEEEauthorblockA{\textit{Mestrado em Cibersegurança}\\
-    Universidade de Aveiro, Portugal\\
-    pmsmarques@ua.pt}
-}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{\sc e}\kern-.125emX}}
 
 \begin{document}
+
+\title{SecureBank PT: Secure Planning of a Mobile Online Banking Application}
+
+\author{
+\IEEEauthorblockN{Rafael Feliciano Soares, Guilherme Almiro Viana Fernandes Tavares, Francisco Antunes dos Reis,\\
+Pedro Miguel Paulo Martins, Pedro Miguel dos Santos Marques}
+\IEEEauthorblockA{\textit{Mestrado em Cibersegurança}, Universidade de Aveiro, Portugal\\
+\{rafael, gavftavares, franciscoareis, pedropmartins, pmsmarques\}@ua.pt}
+}
+
 \maketitle
 
-% ---------------------------------------------------------------
-% ABSTRACT  (~10% do paper)
-% ---------------------------------------------------------------
 \begin{abstract}
-% TODO: 1 parágrafo (~150 palavras).
-% Diz: (1) o que é o sistema, (2) que abordagem de ciclo de vida seguro aplicaste,
-% (3) qual a conclusão principal (ex.: os riscos mais críticos e como os mitigaste).
-%
-% Exemplo de arranque:
-% "This paper applies a Secure Software Development Lifecycle (SSDL)
-%  to a Portuguese mobile banking application offering transfers,
-%  MB WAY integration and card controls. We map each lifecycle phase
-%  to concrete security activities aligned with the NIST SSDF (SP~800-218)
-%  and OWASP SAMM v2 frameworks, derive six measurable non-functional
-%  security requirements (NFRs), and identify the three riskiest design
-%  violations with their mitigations. Results show that ..."
 This paper presents a secure online banking application for a Portuguese retail bank,
 that provides financial services such as money transfers, MB~WAY payments and card controls.
 This solution aims to address reliability, robustness and security, by integrating
@@ -73,372 +43,31 @@ security practices from the Secure Software Development Lifecycle (SSDL).
 The development approach was guided and is aligned with the NIST Secure Software Development
 Framework (SSDF) and OWASP Software Assurance Maturity Model (SAMM) v2, where we included
 security practices along the development lifecycle, such as defining security requirements,
-threat modeling and security testing. This approach helps identify and mitigate risks before
+threat modelling and security testing. This approach helps identify and mitigate risks before
 they become a problem. We have identified the following pressing issues: Complete Mediation,
 Least Common Mechanism and Psychological Acceptability. Proposed mitigations include requiring
 Multi Factor Authentication when executing sensitive operations, isolating internal services,
-and using simple 4 digit PINs and resonable session durations to balance usability and security.
-
-
+and using simple 6-digit PINs and reasonable session durations to balance usability and security.
+Unlike existing banking apps, which rely on SMS codes and long-lived sessions, the solution
+binds authentication to the device with biometrics and signs every sensitive operation.
+The owner, tasks, tools and evidence of each lifecycle phase are defined, and a Cyber
+Resilience Act quick-scan identifies the applicable obligations.
 \end{abstract}
 
 \begin{IEEEkeywords}
-secure software lifecycle, SSDL, mobile banking, NIST SSDF, OWASP SAMM, NFR, threat modelling
+secure software lifecycle, SSDL, mobile banking, NIST SSDF, OWASP SAMM, threat modelling, multi-factor authentication, Cyber Resilience Act
 \end{IEEEkeywords}
 
-% ---------------------------------------------------------------
-% 1. INTRODUCTION  (~30% do paper)
-% ---------------------------------------------------------------
-\section{Introduction}
-\label{sec:intro}
+\input{acronymlist}
 
-% TODO: Apresenta o sistema — responde a:
-%   - O que é? (mobile app banco português, transferências, MB WAY, controlos cartão)
-%   - Quem são os utilizadores e interfaces? (~2-3 interfaces)
-%   - Que funções cobre? (5-8 funções, foco em cibersegurança)
-%   - Porquê é crítico? (dados financeiros, regulação PSD2/DORA, fraude)
-%   - Estrutura do paper (1 parágrafo no fim da intro)
+\input{sections/section1}
+\input{sections/section2}
+\input{sections/section3}
+\input{sections/section4}
+\input{sections/section5}
+\input{sections/section6}
 
-Mobile banking is central to retail banks in Portugal. Because these applications run on
-untrusted consumer devices and interact directly with the core banking networks, any flaw or
-bug in the implementation or design can lead to leaving users exposed to many kinds of attacks.
-As such, building a robust banking mobile application is essencial to maintain the security of
-data and users. However, security is still often treated as an afterthought. This paper applies
-an SSDL to a Portuguese retail bank's mobile banking application, creating a phase by phase
-mapping, measurable security requirements, and comparision against secure design principles.
-
-\subsection{Security Context}
-
-% TODO: regulação aplicável (PSD2, DORA, GDPR) e ameaças típicas (phishing, MitM, credential stuffing)
-% ~2 parágrafos
-
-Mobile banking applications are subject to strict regulatory requirements in Portugal and
-the European Union, including the Payment Services Directive~2 (PSD2)~\cite{psd2},
-the Digital Operational Resilience Act (DORA)~\cite{dora}, and the General Data
-Protection Regulation (GDPR). PSD2 mandates Strong Customer Authentication (SCA) for
-all payment transactions, while DORA requires financial entities to demonstrate
-operational resilience and incident response capability. Given the high value of
-financial assets and sensitive personal data handled, such applications face a broad
-threat landscape including credential stuffing, in which the attackers try usernames and
-passwords leaked from other services, phishing, where the users are tricked by fraudsters
-into revealing credentials or authentication codes through a variaty of methods, such as
-fake websites, SMS or phone calls, man-in-the-middle attacks, where an attacker attempts
-to intercept or manipulate communications between two parties, allowing attackers to
-steal credentials or execute unauthorised actions to, and, finally, API abuse, where
-attackers exploit backend weaknesses to do a variaty of different outcomes, such as
-steal personal information, execute admin actions and much more.
-
-With the introduction of the Cyber Resilience Act (CRA), most companies, specifically
-those that handle critical infrastructure (such as banks) and personal information,
-are required to include security into planning, design, development and maintenance
-of their digital products. Companies are now mandated, by law, to maintain a Software
-Bill of Materials (SBOM), which boils down to being a list of all the third-party
-software components and dependencies that the service is dependent on, as well as their
-versions. The SBOM helps companies identify quicker vulnerable third-party libraries.
-CRA regulation also mandates that companies need to shift from a reactive mindset to a
-proactive, continuous monitoring structure, where the companies need to handle
-vulnerabilities, where they need to detect, manage, patch and report security flaws
-in their products during its expected lifecycle. Additionally, CRA dictates that products
-must be delivered to the end user with the most secure configurations alread activated,
-mandating the Secure by Default principle.
-
-\subsection{Scope and Approach}
-
-% TODO: diz que vais aplicar SSDL fase a fase, usando NIST SSDF como referência principal
-
-The system considered for in this paper is a mobile application for a Portuguese retail
-bank. It provides customers with the essencial banking services, including SEPA and
-instant bank transfers, MB~WAY payments, card managements (freezing, setting spending
-limits, changing PINs), and access to account statements and transaction history.
-The application interacts with three main external interfaces: the bank's core banking
-system via an internal REST~API, the MB~WAY interoperability network, and the Portuguese
-national payment scheme (Multibanco/SIBS). Two categories of users were considered:
-customers, who access the banking services and manage their own accounts, and system
-administrators, who execute system managing tasks that are subjected to a role based
-access control.
-
-This paper applies a Secure Software Development Lifecycle (SSDL) to the mobile
-banking application, mapping security activities to each development phase following
-the NIST Secure Software Development Framework (SSDF, SP~800-218)~\cite{nist_ssdf}
-and drawing on OWASP SAMM~v2~\cite{owasp_samm} for maturity assessment. The remainder
-of the paper is organised as follows: Section~\ref{sec:lifecycle} describes the
-security activities per lifecycle phase; Section~\ref{sec:nfr} presents six measurable
-non-functional security requirements; Section~\ref{sec:principles} evaluates the
-system against ten secure design principles; Section~\ref{sec:conclusion} concludes.
-
-% ---------------------------------------------------------------
-% 2. SECURE SOFTWARE LIFECYCLE  (~50% do paper — PARTE PRINCIPAL)
-% ---------------------------------------------------------------
-\section{Secure Software Lifecycle}
-\label{sec:lifecycle}
-
-% Guia: para cada fase, descreve (1) o que se faz em geral e (2) como se aplica
-% especificamente à app de banking. ~1-2 parágrafos + lista de actividades por fase.
-
-\subsection{Training}
-
-% TODO: que formação a equipa de dev precisa? Ex.: OWASP Mobile Top 10, secure coding
-% em Swift/Kotlin, PSD2/SCA, tratamento de dados financeiros (GDPR)
-% Output esperado: training records (evidência para auditoria)
-
-Before development begins, all team members must complete role-based secure development
-training. For a mobile banking application the relevant topics include: OWASP Mobile
-Security Testing Guide (MSTG)~\cite{owasp_mstg}, secure coding in Android (Kotlin) and
-iOS (Swift), cryptographic key management, PSD2/SCA implementation requirements, and
-GDPR data handling obligations.
-
-\subsection{Requirements}
-
-% TODO: security requirements específicos do banking, abuse cases, compliance mapping
-% Output esperado: security requirements catalogue
-% Dica: liga a Section 3 (NFRs) aqui — "the measurable NFRs are defined in Section III"
-
-Security requirements are derived from regulatory obligations (PSD2, DORA, GDPR),
-known threat patterns (OWASP Mobile Top~10), and stakeholder abuse cases. Key
-requirements include: enforcement of Strong Customer Authentication for all payment
-operations, end-to-end encryption of all financial data in transit and at rest, session
-timeout and re-authentication policies, and tamper-evident audit logging of all
-privileged operations. Measurable non-functional requirements (NFRs) derived from these
-are presented in Section~\ref{sec:nfr}.
-
-\subsection{Design}
-
-% TODO: threat modelling (STRIDE sobre o contexto diagram), decisões de arquitectura
-% (ex: certificate pinning, token-based auth, offline vs online), crypto choices
-% Output esperado: threat model, design review minutes
-
-The design phase centres on threat modelling using the STRIDE methodology applied to the
-system's context diagram. The main components — mobile client, API gateway, core banking
-backend, and MB~WAY integration — are analysed for Spoofing, Tampering, Repudiation,
-Information Disclosure, Denial of Service, and Elevation of Privilege threats.
-
-% TODO: descreve 3-4 decisões de arquitectura concretas e porquê (ex: certificate
-% pinning para evitar MitM, JWT com curta expiração, separação de ambientes prod/dev)
-
-Key architectural decisions include: TLS~1.3 with certificate pinning on the mobile
-client to prevent man-in-the-middle attacks; short-lived JWT access tokens (15~min
-expiry) with refresh token rotation; strict separation of production and development
-environments (NIST SSDF PO.5); and a zero-trust API gateway enforcing per-endpoint
-authorisation.
-
-\subsection{Implementation}
-
-% TODO: secure coding standard adoptado, SAST tool usado, dependency scanning,
-% secret scanning no CI/CD pipeline
-% Output esperado: clean SAST gate, SBOM
-
-During implementation the team follows the OWASP Mobile Application Security
-Verification Standard (MASVS)~\cite{owasp_masvs} as the secure coding standard.
-Static Application Security Testing (SAST) is integrated into the CI/CD pipeline,
-blocking merges when high-severity findings are detected. Software Composition Analysis
-(SCA) scans all third-party dependencies for known vulnerabilities (CVEs), and secret
-scanning prevents credentials from being committed to the repository. A Software Bill
-of Materials (SBOM) is generated at each release.
-
-\subsection{Verification}
-
-% TODO: DAST, fuzzing da API, pentest da app móvel, code review focalizado em auth
-% Output esperado: test reports, residual-risk list
-
-Verification combines automated and manual techniques. Dynamic Application Security
-Testing (DAST) is performed against the staging API environment. The mobile application
-undergoes penetration testing following the OWASP MSTG checklist, covering reverse
-engineering protections, insecure data storage, and authentication bypass. Fuzz testing
-targets the payment API endpoints. All findings are recorded in a residual-risk list
-with severity, owner, and remediation deadline.
-
-\subsection{Release}
-
-% TODO: final security review, go/no-go criteria, signing of artefacts, incident response plan
-% Output esperado: go/no-go record, response runbook
-
-Before production release, a final security review validates that all critical and
-high-severity findings are resolved and the residual-risk list has been accepted by the
-security officer. Release artefacts (APK/IPA) are signed with the organisation's
-code-signing certificate, and a SHA-256 hash is published for integrity verification.
-An incident response runbook specific to the banking application is prepared and
-reviewed with the PSIRT team.
-
-\subsection{Operations}
-
-% TODO: monitorização runtime (ex: anomaly detection em transacções), vulnerability
-% disclosure, patching cadence, EoL plan
-% Output esperado: advisories, patch cadence, PSIRT
-
-In production, the application is monitored for anomalous transaction patterns and
-authentication failures using a Security Information and Event Management (SIEM) system.
-A vulnerability disclosure policy is published, and a patch cadence of 30~days for
-critical CVEs and 90~days for medium severity is defined. An end-of-life plan ensures
-that deprecated API versions are retired with adequate user notice.
-
-% ---------------------------------------------------------------
-% 3. MEASURABLE NFRs  (~parte da secção de lifecycle)
-% ---------------------------------------------------------------
-\section{Measurable Non-Functional Requirements}
-\label{sec:nfr}
-
-% TODO: 3 atributos de qualidade escolhidos + justificação, depois 2 NFRs por atributo.
-% Formato de um bom NFR: condição + comportamento mensurável + threshold + método de verificação
-% Exemplo: "When a user enters an incorrect PIN more than 3 times within 60~s,
-%           the system shall lock the account for 15~min and generate an audit event
-%           (Security -- Accountability; verified by functional test T-AUTH-02)."
-
-Based on the system's risk profile, three quality attributes were selected as most
-critical: \textbf{Security} (confidentiality and accountability sub-characteristics),
-\textbf{Availability}, and \textbf{Integrity}.
-
-\subsection{Security}
-
-\begin{itemize}
-  \item \textbf{NFR-SEC-01 (Accountability):} When a user performs any fund transfer,
-    the system shall record a tamper-evident audit event containing user~ID, timestamp,
-    source and destination accounts, and amount, within 500~ms of the operation.
-    \textit{Verification: automated audit-log test suite (T-SEC-01).}
-
-  \item \textbf{NFR-SEC-02 (Confidentiality):} A user without the ``card-manager'' role
-    shall not be able to retrieve another user's card~PIN or card number in plain text
-    via any API endpoint.
-    \textit{Verification: negative access-control test (T-SEC-02).}
-\end{itemize}
-
-\subsection{Availability}
-
-\begin{itemize}
-  \item \textbf{NFR-AVL-01:} The payment API shall maintain a monthly availability of
-    $\geq$99.9\% (excluding planned maintenance windows of $\leq$4~h/month), degrading
-    gracefully to read-only mode when the core banking backend is unreachable.
-    \textit{Verification: availability monitoring dashboard + chaos engineering test (T-AVL-01).}
-
-  \item \textbf{NFR-AVL-02:} After a watchdog-triggered service restart, the API
-    gateway shall restore full service within $\leq$60~s.
-    \textit{Verification: restart recovery test in staging (T-AVL-02).}
-\end{itemize}
-
-\subsection{Integrity}
-
-\begin{itemize}
-  \item \textbf{NFR-INT-01:} Any API response carrying a transaction record shall
-    include an HMAC-SHA256 signature; the mobile client shall reject responses whose
-    signature does not verify against the published public key.
-    \textit{Verification: tamper-injection test (T-INT-01).}
-
-  \item \textbf{NFR-INT-02:} Release artefacts (APK/IPA) shall be code-signed, and
-    the mobile OS shall reject unsigned or improperly signed builds at install time.
-    \textit{Verification: install test with a tampered binary (T-INT-02).}
-\end{itemize}
-
-% ---------------------------------------------------------------
-% 4. DESIGN PRINCIPLES CHECKLIST  (~10% do paper)
-% ---------------------------------------------------------------
-\section{Secure Design Principles Evaluation}
-\label{sec:principles}
-
-% TODO: preencher a tabela com os 10 princípios da S01.
-% Para cada um: honra (H) ou viola (V), e uma linha de justificação.
-% Os 3 piores violations têm de ter mitigação (última coluna).
-% Ajusta os princípios se a S01 tiver nomes ligeiramente diferentes.
-
-Table~\ref{tab:principles} evaluates the banking application against the ten secure
-design principles introduced in RS-S01.
-
-\begin{table*}[t]
-\caption{Secure Design Principles Checklist}
-\label{tab:principles}
-\begin{tabularx}{\textwidth}{lXcX}
-\toprule
-\textbf{\#} & \textbf{Principle} & \textbf{H/V} & \textbf{Justification / Mitigation} \\
-\midrule
-1 & Least Privilege & H &
-  A regular user has no access to user management and cannot freeze or delete other accounts.
-  An admin cannot initiate transfers or manage a user's account directly. \\
-2 & Fail-safe Defaults & H &
-  Failed login denies access. A failed transfer is automatically cancelled and never processed. \\
-3 & Economy of Mechanism & H &
-  A centralised permission manager serves both the mobile app and desktop interfaces,
-  providing a single authoritative access-control point. \\
-4 & Complete Mediation & \textbf{V} &
-  Login credentials are cached; the user is not re-authenticated on every session entry.
-  \textit{Mitigation: introduce a 4-digit PIN for fast re-authentication; enforce session
-  timeout after 15~min of inactivity; require MFA only for high-value operations such
-  as large transfers.} \\
-5 & Open Design & H &
-  Even knowing the bank's internal security architecture, an attacker cannot access a
-  user account without the correct password/PIN. Security relies on key secrecy, not
-  obscurity. \\
-6 & Separation of Privilege & H &
-  Large transfers and account creation require MFA. An admin freezing an account must
-  obtain confirmation from a supervisor or a second admin. \\
-7 & Least Common Mechanism & \textbf{V} &
-  All data is stored on a single global server instead of region-isolated servers,
-  creating a single point of failure and shared-risk exposure.
-  \textit{Mitigation: partition critical-data components; isolate internal services;
-  deploy independent regional storage for sensitive data.} \\
-8 & Psychological Acceptability & \textbf{V} &
-  Users reject frequent MFA prompts, mandatory login on every app launch, and
-  rapidly expiring session tokens, which they consider overly intrusive.
-  \textit{Mitigation: 4-digit PIN instead of a complex password; reasonable session
-  duration with silent renewal; step-up MFA only when genuinely necessary.} \\
-9 & Defence in Depth & H &
-  Multiple independent layers: password, MFA via email/SMS, session tokens with
-  expiry, and a bank-issued verification matrix for account creation or confirmation. \\
-10 & Fail Securely & H &
-  An error during a loan request displays only a generic message (``action could not
-  be completed''); no technical details are exposed that could be exploited to bypass
-  interest calculations or other business rules. \\
-\bottomrule
-\end{tabularx}
-\end{table*}
-
-% ---------------------------------------------------------------
-% 5. CONCLUSION
-% ---------------------------------------------------------------
-\section{Conclusion}
-\label{sec:conclusion}
-
-% TODO: ~1-2 parágrafos.
-% Resume: o que fizeste, os riscos mais críticos encontrados, e os próximos passos
-% (Exercise 2 vai usar os NFRs daqui).
-
-This paper applied a Secure Software Development Lifecycle to a Portuguese mobile
-banking application, mapping concrete security activities to each phase from training
-to operations, drawing on the NIST~SSDF and OWASP~SAMM frameworks. Three quality
-attributes -- Security, Availability, and Integrity -- were selected as the most
-critical for this domain, yielding six measurable NFRs that will seed the requirements
-catalogue in the next exercise. The three most significant design violations identified are: incomplete mediation
-(login credentials cached across sessions), least common mechanism (single global
-server with no regional isolation), and psychological acceptability (users rejecting
-frequent MFA and short session timeouts). Mitigations for each have been defined at
-the design and requirements level and will seed the requirements catalogue in Exercise~2.
-
-% ---------------------------------------------------------------
-% REFERENCES
-% ---------------------------------------------------------------
-\begin{thebibliography}{00}
-
-\bibitem{psd2}
-European Parliament, ``Directive (EU) 2015/2366 on Payment Services (PSD2),''
-\textit{Official Journal of the European Union}, Dec. 2015.
-
-\bibitem{dora}
-European Parliament, ``Regulation (EU) 2022/2554 -- Digital Operational Resilience Act
-(DORA),'' \textit{Official Journal of the European Union}, Dec. 2022.
-
-\bibitem{nist_ssdf}
-M. Souppaya, K. Scarfone, and D. Dodson, ``Secure Software Development Framework
-(SSDF) Version~1.1,'' NIST Special Publication~800-218, Feb. 2022.
-
-\bibitem{owasp_samm}
-OWASP Foundation, ``Software Assurance Maturity Model (SAMM) v2.0,'' 2020.
-[Online]. Available: \url{https://owaspsamm.org}
-
-\bibitem{owasp_mstg}
-OWASP Foundation, ``Mobile Security Testing Guide (MSTG),'' 2023.
-[Online]. Available: \url{https://mas.owasp.org/MASTG/}
-
-\bibitem{owasp_masvs}
-OWASP Foundation, ``Mobile Application Security Verification Standard (MASVS) v2,''
-2023. [Online]. Available: \url{https://mas.owasp.org/MASVS/}
-
-\end{thebibliography}
+\bibliographystyle{IEEEtran}
+\bibliography{biblio}
 
 \end{document}

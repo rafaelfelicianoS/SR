@@ -1,0 +1,96 @@
+\section{Secure Life Cycle Description}
+\label{sec:lifecycle}
+
+\begin{table*}[t]
+\caption{Secure lifecycle plan: activities, owners, tools and evidence per phase}
+\label{tab:lifecycle}
+\centering
+\footnotesize
+\begin{tabularx}{\textwidth}{@{}L{1.7cm}L{4.6cm}L{1.2cm}L{4.1cm}Y@{}}
+\toprule
+\textbf{Phase} & \textbf{Activities} & \textbf{Owner} & \textbf{Tools} & \textbf{Evidence produced} \\
+\midrule
+Training & Role-based secure coding (Kotlin, Swift, Java); mobile pitfalls; phishing and social-engineering awareness; yearly refresh & SC, CO & OWASP MASTG labs, Secure Code Warrior, internal LMS & Training records per person, quiz scores (\ac{CRA}/\ac{DORA} audit evidence) \\
+Requirements & Security requirements R1--R9 as user stories; abuse cases per function; compliance mapping (\ac{PSD2} \ac{SCA}, \ac{GDPR}, \ac{CRA} Annex~I) & PO, SA, CO & Jira (security labels), \ac{MASVS} with L2 and R profiles & Security requirements catalogue, abuse-case list, traceability matrix \\
+Design & \ac{STRIDE} threat modelling on the \ac{DFD}; architecture review; crypto and trust design (keys in \ac{HSM} and secure element) & SA, SC & OWASP Threat Dragon, draw.io & Threat model, design review minutes, crypto inventory \\
+Implementation & Secure coding standard; peer review with security checklist; \ac{SAST}, dependency and secret scanning on every merge request; \ac{SBOM} generation & DEV, SC, DSO & Semgrep, SonarQube, MobSF (static), OWASP Dependency-Track, CycloneDX, Gitleaks & Clean \ac{SAST} gate, review logs, signed \ac{SBOM} per build \\
+Verification & \ac{DAST} of the \ac{API}; mobile dynamic tests; fuzzing of \ac{API} parsers; robustness and load tests; external pentest before release & QA, external & OWASP ZAP, MobSF (dynamic), Frida, Jazzer, k6 & Test reports, fuzzing coverage, pentest report, residual-risk list \\
+Release \& Operations & Final security review (go/no-go); code and app signing; \ac{IRP}; \ac{SIEM} monitoring; vulnerability disclosure and patching & PO, DSO, \ac{PSIRT} & Sigstore/cosign, Play/App Store signing, Wazuh \ac{SIEM}, security.txt & Go/no-go record, \ac{IRP} runbook, advisories, patch SLA metrics \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+SecureBank PT is developed in two-week sprints, so security activities
+are part of each sprint and of the \ac{CI/CD} pipeline. The plan selects practices from NIST \ac{SSDF}~\cite{nist800218},
+Microsoft \ac{SDL}~\cite{mssdl} and McGraw's touchpoints~\cite{mcgraw2006},
+and uses the OWASP \ac{MASVS}~\cite{masvs} as the verification baseline for
+the mobile application. Maturity is measured yearly with OWASP \ac{SAMM}~\cite{samm}, aiming at
+level~2 in every practice. Table~\ref{tab:lifecycle} summarises the plan.
+
+\subsection{Roles}
+The \textbf{Security Architect (SA)} owns the threat model and design
+reviews. The \textbf{Security Champion (SC)} is one developer per squad
+who triages tool findings and runs code reviews, while \textbf{Developers
+(DEV)} implement features and fix findings. The \textbf{QA/Security Tester
+(QA)} runs dynamic tests and fuzzing and coordinates the external pentest. The \textbf{DevSecOps Engineer (DSO)}
+manages the pipeline, signing keys, secrets and monitoring. The
+\textbf{Product Owner (PO)} accepts security requirements and residual
+risk. The \textbf{Compliance Officer / DPO (CO)} handles regulatory
+mapping, and the \textbf{\ac{PSIRT}}, chaired by the bank CISO, handles
+vulnerabilities and incidents after release.
+
+\subsection{Training}
+Before committing code, each team member completes training according to
+their role. Developers cover the OWASP Mobile and \ac{API} Top~10 in
+Kotlin, Swift and Java, testers cover \ac{MASVS}, and product owners cover
+abuse cases and social-engineering fraud in MB WAY. It is repeated
+yearly and after major incidents, with records kept by the SC.
+
+\subsection{Requirements}
+Requirements R1--R9 are written as testable user stories, for example ``a
+session token older than 5~minutes is rejected''. Each function has at
+least one abuse case~\cite{mcgraw2006}, such as enrolling a second device
+with a stolen \ac{PIN}, replaying a signed transfer, or a coerced customer
+sending money to a mule account. The CO maps them to \ac{PSD2},
+\ac{GDPR} and \ac{CRA} Annex~I in a traceability matrix.
+
+\subsection{Design}
+The SA applies \ac{STRIDE} to the \ac{DFD} of Figure~\ref{fig:context}
+whenever a feature crosses a trust boundary~\cite{shostack2014}. Each
+threat is assigned an owner and a mitigation, for example R2 and R4 for
+spoofing, per-operation ECDSA signatures over the amount and payee for
+tampering, and the signed audit log for repudiation. Design reviews use the
+IEEE top ten design flaws~\cite{ieeecsd2014} and Table~\ref{tab:principles}
+as checklists, and verify idempotency keys and exactly-once transfers. Only
+vetted libraries and standard algorithms are used, and the update channel
+is designed so that patches can be deployed quickly.
+
+\subsection{Implementation}
+Every merge request runs \ac{SAST}, MobSF, secret scanning and dependency
+scanning, and a high or critical finding blocks the merge unless the PO
+formally accepts the risk. Each build generates a CycloneDX \ac{SBOM}, so
+the team knows which components run in each environment, which was the
+inventory missing in the Equifax case~\cite{equifax2018}. Changes to
+security-relevant code are reviewed by a second developer and by the SC.
+Open findings per severity and time to fix are reported to the PO in each
+sprint.
+
+\subsection{Verification}
+OWASP ZAP scans the \ac{API} every night, while MobSF and Frida check root
+detection, certificate pinning and secure storage on the device. Jazzer
+fuzzes the request parsers of the backend, and k6 load tests confirm R6 by
+checking that the gateway rejects requests under overload instead of mixing
+sessions. An authorised external team performs a penetration test before
+each major release. Open findings go to a residual-risk list signed by
+the PO.
+
+\subsection{Release and Operations}
+A go/no-go review checks the pipeline gates, the pentest status and the
+\ac{SBOM} before each release. Artefacts are signed with keys in the
+\ac{HSM}, and deployments are progressive and verified on every node, so a
+partial release as in the Knight Capital case~\cite{knight2013} is
+detected before reaching customers. The \ac{SIEM}
+raises brute-force and fraud alerts (R9). The
+\ac{PSIRT} publishes a vulnerability disclosure policy, releases critical
+fixes within 72~hours as security-only updates, and rehearses the \ac{IRP}
+twice a year, including the \ac{CRA} and \ac{DORA} reporting deadlines.

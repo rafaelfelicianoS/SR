@@ -1,0 +1,54 @@
+% Source of Context-Diagram.pdf. Rebuild: pdflatex Context-Diagram.tex
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usetikzlibrary{positioning,fit,shapes.misc,arrows.meta,backgrounds}
+\begin{document}
+\begin{tikzpicture}[font=\scriptsize,
+  fn/.style={draw,rounded corners=2pt,text width=2.6cm,minimum height=0.42cm,align=center},
+  fns/.style={draw,rounded corners=2pt,text width=1.17cm,minimum height=0.42cm,align=center},
+  comp/.style={draw,thick,minimum height=0.9cm,align=center,fill=gray!8},
+  actor/.style={draw,circle,minimum size=0.25cm,inner sep=0},
+  arr/.style={-{Latex[length=1.6mm]},thick},
+  tb/.style={draw,dashed,red!70!black,rounded corners}]
+% mobile app
+\node[fn] (tr) at (0,0) {Transfer money / MB WAY};
+\node[fn,below=0.08cm of tr] (acc) {Account management};
+\node[fn,below=0.08cm of acc] (card) {Card management};
+\node[fn,below=0.08cm of card] (hist) {Transaction history};
+\node[fns,below=0.08cm of hist.south west,anchor=north west] (deb) {Debit (auto)};
+\node[fns,below=0.08cm of hist.south east,anchor=north east] (cred) {Credit (auto)};
+\node[draw,thick,fit=(tr)(deb)(cred),inner sep=4pt,label={[font=\scriptsize\bfseries]above:Mobile App}] (app) {};
+% desktop
+\node[fn,below=0.95cm of deb.south west,anchor=north west] (um) {User management};
+\node[fn,below=0.08cm of um] (bm) {Bank management};
+\node[draw,thick,fit=(um)(bm),inner sep=4pt,label={[font=\scriptsize\bfseries]above:Back-office Desktop}] (desk) {};
+% actors
+\node[actor,left=1.0cm of app] (uh) {};
+\node[below=0pt of uh] (ul) {Customer};
+\node[actor,left=1.0cm of desk] (ah) {};
+\node[below=0pt of ah] (al) {Admin};
+% backend
+\node[comp,right=1.0cm of app.east,yshift=-0.9cm] (gw) {API Gateway\\(mTLS, WAF,\\rate limit)};
+\node[comp,right=0.5cm of gw] (be) {Banking\\Backend\\(IAM, RBAC,\\audit log)};
+\node[comp,above=0.35cm of be] (hsm) {HSM};
+\node[comp,below=0.35cm of be] (core) {Core Banking /\\SIBS (MB WAY)};
+\node[actor,below=0.55cm of core] (bh) {};
+\node[below=0pt of bh] (bl) {Bank};
+% flows
+\draw[arr,<->] (uh) -- node[above,font=\tiny]{bio+PIN} (app.west|-uh);
+\draw[arr,<->] (ah) -- node[above,font=\tiny]{BtG} (desk.west|-ah);
+\draw[arr,<->] (app.east|-gw.150) -- node[above,font=\tiny]{TLS 1.3} (gw.150);
+\draw[arr,<->] (desk.east) -| node[above,pos=0.25,font=\tiny]{VPN+mTLS} (gw.south);
+\draw[arr,<->] (gw) -- (be);
+\draw[arr,<->] (be) -- (hsm);
+\draw[arr,<->] (be) -- (core);
+\draw[arr,<->] (core) -- (bh);
+% trust boundaries
+\begin{scope}[on background layer]
+\node[tb,fit=(app)(desk),inner sep=12pt,label={[red!70!black,font=\tiny]below:untrusted clients}] {};
+\node[tb,fit=(gw)(be)(hsm)(core),inner sep=4pt,label={[red!70!black,font=\tiny]above:bank data centre}] {};
+\end{scope}
+\end{tikzpicture}
+\end{document}

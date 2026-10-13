@@ -1,0 +1,76 @@
+\section{System Description and Design Principles}
+\label{sec:system}
+
+\subsection{Scope, Users and Interfaces}
+
+Figure~\ref{fig:context} shows the context diagram of SecureBank PT. The
+\emph{Customer} uses the mobile application on Android or iOS, the
+\emph{Admin} uses the back-office desktop application, and the \emph{Bank}
+represents core banking and the SIBS network. All clients are
+untrusted and reach the bank through an API gateway with TLS~1.3 and
+certificate pinning, the desktop also through a VPN with \ac{mTLS}, and
+keys are stored in an \ac{HSM}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{Context-Diagram.pdf}
+  \caption{Context diagram of SecureBank PT with trust boundaries.}
+  \label{fig:context}
+\end{figure}
+
+\subsection{Security Requirements}
+
+The team workshop defined the following requirements.
+\textbf{R1}~\ac{RBAC} for customers, admins and auditors, where the user
+explicitly confirms the role in use. \textbf{R2}~\ac{MFA} combining
+biometrics (inherence) and a six-digit \ac{PIN} (knowledge) on an enrolled
+device (possession), which satisfies \ac{PSD2}
+\ac{SCA}~\cite{psd2rts}. \textbf{R3}~No cached login: the
+session ends when the application is closed or after two minutes of
+inactivity, and tokens are short-lived. \textbf{R4}~Authentication
+depends on a per-user key kept in the secure element of the device. \textbf{R5}~A matrix card code and the \ac{PIN} are used as
+a recovery factor when the device is lost. \textbf{R6}~Isolated channels
+per user and per operation, rejecting requests under overload instead of
+degrading isolation. \textbf{R7}~Atomic operations and a \ac{BtG} protocol
+for exceptional admin access. \textbf{R8}~Encryption of data in transit
+and at rest. \textbf{R9}~Logging of every authentication attempt, with rate
+limiting and brute-force alerts sent to the \ac{SIEM} for investigation.
+
+\subsection{Assessment Against Design Principles}
+
+The initial design was reviewed by the team against ten secure design
+principles, the eight of Saltzer and Schroeder~\cite{saltzer1975} plus
+defence in depth and fail securely. Table~\ref{tab:principles} summarises
+the result.
+
+\begin{table}[t]
+\caption{Design principles in the initial design: honoured (\checkmark) or violated (\texttimes)}
+\label{tab:principles}
+\centering
+\footnotesize
+\begin{tabularx}{\columnwidth}{@{}L{2.45cm}@{\,}c@{\,}Y@{}}
+\toprule
+\textbf{Principle} & & \textbf{Evidence in the design} \\
+\midrule
+Least privilege & \checkmark & Users cannot manage users; admins cannot move money \\
+Fail-safe defaults & \checkmark & Failed login or transfer is denied \\
+Economy of mech. & \checkmark & One permission manager for app and desktop \\
+Complete mediation & \texttimes & Login cached, no check on each access \\
+Open design & \checkmark & Knowing the architecture does not reveal the \ac{PIN} \\
+Separation of priv. & \checkmark & \ac{MFA} for large transfers; second admin to freeze accounts \\
+Least common mech. & \texttimes & Single global server for all data \\
+Psych. accept. & \texttimes & Users reject frequent \ac{MFA}, logins and expiring tokens \\
+Defence in depth & \checkmark & \ac{PIN}, \ac{MFA}, expiring tokens, bank matrix card \\
+Fail securely & \checkmark & Errors show a generic message, no technical details \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The three violations are mitigated in the final design. For complete
+mediation, the cached login is replaced by R3, and \ac{MFA} is required
+for critical actions such as large transfers. For least common mechanism,
+critical data is kept in separate components, internal services are
+isolated, and sensitive data is stored in independent regions. For
+psychological acceptability, biometrics and a six-digit \ac{PIN} replace
+complex passwords, tokens are renewed silently while the user is active,
+and step-up \ac{MFA} is only requested when needed.
