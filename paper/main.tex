@@ -99,12 +99,13 @@ secure software lifecycle, SSDL, mobile banking, NIST SSDF, OWASP SAMM, NFR, thr
 %   - Porquê é crítico? (dados financeiros, regulação PSD2/DORA, fraude)
 %   - Estrutura do paper (1 parágrafo no fim da intro)
 
-The system under analysis is a mobile banking application for a Portuguese retail bank,
-providing customers with core financial services including fund transfers (SEPA and
-instant), MB~WAY integration, card controls (freeze, spending limits, PIN change), and
-account statement access. The application interacts with three main external interfaces:
-the bank's core banking system via an internal REST~API, the MB~WAY interoperability
-network, and the Portuguese national payment scheme (Multibanco/SIBS).
+Mobile banking is central to retail banks in Portugal. Because these applications run on
+untrusted consumer devices and interact directly with the core banking networks, any flaw or
+bug in the implementation or design can lead to leaving users exposed to many kinds of attacks.
+As such, building a robust banking mobile application is essencial to maintain the security of
+data and users. However, security is still often treated as an afterthought. This paper applies
+an SSDL to a Portuguese retail bank's mobile banking application, creating a phase by phase
+mapping, measurable security requirements, and comparision against secure design principles.
 
 \subsection{Security Context}
 
