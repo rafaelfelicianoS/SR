@@ -3,13 +3,22 @@
 
 \subsection{Scope, Users and Interfaces}
 
-Figure~\ref{fig:context} shows the context diagram of SecureBank PT. The
-\emph{Customer} uses the mobile application on Android or iOS, the
-\emph{Admin} uses the back-office desktop application, and the \emph{Bank}
-represents core banking and the SIBS network. All clients are
-untrusted and reach the bank through an API gateway with TLS~1.3 and
-certificate pinning, the desktop also through a VPN with \ac{mTLS}, and
-keys are stored in an \ac{HSM}.
+SecureBank~PT provides six functions: device enrolment and login, SEPA
+and instant transfers, MB~WAY payments, card management (freezing,
+spending limits and \ac{PIN} change), account statements and transaction
+history, and back-office user and account management.
+Figure~\ref{fig:context} shows the context diagram. The \emph{Customer}
+uses the mobile application on Android or iOS, and the \emph{Admin}, who
+operates the application and checks that everything in it runs
+correctly, uses the back-office desktop application. The Admin role
+covers several functions, such as operation and audit, each with its own
+permissions. The system has three external
+interfaces: the core banking system through an internal REST~\ac{API},
+the MB~WAY network, and the Multibanco/SIBS national payment scheme,
+represented together as the \emph{Bank}. All clients are untrusted and
+reach the bank through an \ac{API} gateway with TLS~1.3 and certificate
+pinning. The desktop also connects through a VPN with \ac{mTLS}, and keys
+are stored in an \ac{HSM}.
 
 \begin{figure}[t]
   \centering
@@ -20,8 +29,8 @@ keys are stored in an \ac{HSM}.
 
 \subsection{Security Requirements}
 
-The team workshop defined the following requirements.
-\textbf{R1}~\ac{RBAC} for customers, admins and auditors, where the user
+The following requirements were defined in a team workshop.
+\textbf{R1}~\ac{RBAC} for customers and admins, where the user
 explicitly confirms the role in use. \textbf{R2}~\ac{MFA} combining
 biometrics (inherence) and a six-digit \ac{PIN} (knowledge) on an enrolled
 device (possession), which satisfies \ac{PSD2}

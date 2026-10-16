@@ -36,22 +36,19 @@ Pedro Miguel Paulo Martins, Pedro Miguel dos Santos Marques}
 \maketitle
 
 \begin{abstract}
-This paper presents a secure online banking application for a Portuguese retail bank,
-that provides financial services such as money transfers, MB~WAY payments and card controls.
-This solution aims to address reliability, robustness and security, by integrating
-security practices from the Secure Software Development Lifecycle (SSDL).
-The development approach was guided and is aligned with the NIST Secure Software Development
-Framework (SSDF) and OWASP Software Assurance Maturity Model (SAMM) v2, where we included
-security practices along the development lifecycle, such as defining security requirements,
-threat modelling and security testing. This approach helps identify and mitigate risks before
-they become a problem. We have identified the following pressing issues: Complete Mediation,
-Least Common Mechanism and Psychological Acceptability. Proposed mitigations include requiring
-Multi Factor Authentication when executing sensitive operations, isolating internal services,
-and using simple 6-digit PINs and reasonable session durations to balance usability and security.
-Unlike existing banking apps, which rely on SMS codes and long-lived sessions, the solution
-binds authentication to the device with biometrics and signs every sensitive operation.
-The owner, tasks, tools and evidence of each lifecycle phase are defined, and a Cyber
-Resilience Act quick-scan identifies the applicable obligations.
+This paper presents the secure planning of SecureBank~PT, a mobile banking
+application for a Portuguese retail bank that provides transfers, MB~WAY
+payments and card controls. The plan follows the NIST Secure Software
+Development Framework (SSDF) and uses OWASP SAMM~v2 to measure maturity.
+A review of the initial design against ten secure design principles found
+three violations: complete mediation, least common mechanism and
+psychological acceptability. They are mitigated with short sessions and
+step-up multi-factor authentication, isolation of internal services, and
+biometrics with a six-digit PIN. For each lifecycle phase, the plan
+defines the activities, owner, tools and evidence, and the security
+requirements are refined into measurable non-functional requirements.
+Finally, a Cyber Resilience Act quick-scan confirms that the application
+is in scope and identifies the obligations that apply and their deadlines.
 \end{abstract}
 
 \begin{IEEEkeywords}

@@ -1,13 +1,13 @@
 \section{Introduction}
 \label{sec:introduction}
 
-Mobile banking is central to retail banks in Portugal. Because these applications run on
-untrusted consumer devices and interact directly with the core banking networks, any flaw or
-bug in the implementation or design can lead to leaving users exposed to many kinds of attacks.
-As such, building a robust banking mobile application is essencial to maintain the security of
-data and users. However, security is still often treated as an afterthought. This paper applies
-a Secure Software Development Lifecycle (SSDL) to a Portuguese retail bank's mobile banking application, creating a phase by phase
-mapping, measurable security requirements, and comparision against secure design principles.
+Mobile banking is the main channel between Portuguese retail banks and
+their customers. The application runs on untrusted consumer devices and
+communicates directly with the core banking systems, so a flaw in its
+design or implementation exposes the money and personal data of the
+customers. Even so, security is still often treated as an afterthought.
+Developers often neglect it for lack of resources and priority~\cite{assal2018soups},
+and many vulnerabilities come from predictable human errors~\cite{anu2020human}.
 
 Past failures rarely needed a sophisticated attack. In 2017, Equifax
 exposed the data of about 147 million people through an Apache Struts flaw
@@ -15,73 +15,35 @@ patched two months earlier, because it had no inventory of where the
 component ran and no working patch process~\cite{equifax2018}. In 2012, Knight Capital
 lost about 440 million dollars in 45 minutes after a deployment reached
 only seven of eight servers~\cite{knight2013}. Both were lifecycle
-failures.
+failures, which shows that security activities must be planned, assigned
+and verified.
 
 \subsection{Security Context}
 
-Mobile banking applications are subject to strict regulatory requirements in Portugal and
-the European Union, including the Payment Services Directive~2 (PSD2)~\cite{psd2},
-the Digital Operational Resilience Act (DORA)~\cite{dora}, and the General Data
-Protection Regulation (GDPR). PSD2 mandates Strong Customer Authentication (SCA) for
-all payment transactions, while DORA requires financial entities to demonstrate
-operational resilience and incident response capability. Given the high value of
-financial assets and sensitive personal data handled, such applications face a broad
-threat landscape including credential stuffing, in which the attackers try usernames and
-passwords leaked from other services, phishing, where the users are tricked by fraudsters
-into revealing credentials or authentication codes through a variaty of methods, such as
-fake websites, SMS or phone calls, man-in-the-middle attacks, where an attacker attempts
-to intercept or manipulate communications between two parties, allowing attackers to
-steal credentials or execute unauthorised actions to, and, finally, API abuse, where
-attackers exploit backend weaknesses to do a variaty of different outcomes, such as
-steal personal information, execute admin actions and much more.
+Mobile banking in the European Union is regulated by the \ac{PSD2}~\cite{psd2},
+which mandates \ac{SCA} for payments, by the \ac{DORA}~\cite{dora}, which
+requires financial entities to demonstrate operational resilience and
+incident response capability, and by the \ac{GDPR}~\cite{gdpr}. The main
+threats are credential stuffing with passwords leaked from other services,
+phishing through fake websites, SMS or phone calls, man-in-the-middle
+attacks on the communication with the bank, and abuse of the backend
+\acp{API} to obtain personal data or execute privileged actions. Fraudulent
+transfers are direct losses for the bank, and each incident damages its
+reputation. Moreover, the \ac{CRA}~\cite{cra} now requires manufacturers of
+digital products to handle security during the whole lifecycle, to keep a
+\ac{SBOM}, to ship products secure by default and to report actively
+exploited vulnerabilities.
 
-With the introduction of the Cyber Resilience Act (CRA), most companies, specifically
-those that handle critical infrastructure (such as banks) and personal information,
-are required to include security into planning, design, development and maintenance
-of their digital products. Companies are now mandated, by law, to maintain a Software
-Bill of Materials (SBOM), which boils down to being a list of all the third-party
-software components and dependencies that the service is dependent on, as well as their
-versions. The SBOM helps companies identify quicker vulnerable third-party libraries.
-CRA regulation also mandates that companies need to shift from a reactive mindset to a
-proactive, continuous monitoring structure, where the companies need to handle
-vulnerabilities, detect, manage, patch and report security flaws
-in their products during its expected lifecycle. Additionally, CRA dictates that products
-must be delivered to the end user with the most secure configurations already activated,
-mandating the Secure by Default principle.
+\subsection{Approach}
 
-Fraudulent or lost transfers are direct losses for the bank, and each
-incident damages its reputation. Since developers often neglect security
-for lack of resources and priority~\cite{assal2018soups}, and many
-vulnerabilities come from predictable human errors~\cite{anu2020human},
-security activities must be planned, assigned and verified.
-
-\subsection{Scope and Approach}
-
-The system considered for in this paper is a mobile application for a Portuguese retail
-bank. It provides customers with the essencial banking services, including SEPA and
-instant bank transfers, MB~WAY payments, card managements (freezing, setting spending
-limits, changing PINs), and access to account statements and transaction history.
-The application interacts with three main external interfaces: the bank's core banking
-system via an internal REST~API, the MB~WAY interoperability network, and the Portuguese
-national payment scheme (Multibanco/SIBS). Two categories of users were considered:
-customers, who access the banking services and manage their own accounts, and system
-administrators, who execute system managing tasks that are subjected to a role based
-access control.
-
-The application (i)~binds authentication to the device using biometrics
-and a six-digit \ac{PIN} instead of SMS \acp{OTP}; (ii)~ends sessions after
-two minutes of inactivity and uses short-lived tokens; (iii)~signs every
-sensitive operation, so the server can verify what the user approved;
-(iv)~executes transfers as atomic and idempotent operations; and
-(v)~rejects requests under overload instead of degrading the isolation
-between users.
-
-This paper applies the SSDL to the mobile
-banking application, mapping security activities to each development phase following
-the NIST Secure Software Development Framework (SSDF, SP~800-218)~\cite{nist800218}
-and drawing on OWASP SAMM~v2~\cite{samm} for maturity assessment. The remainder
-of the paper is organised as follows: Section~\ref{sec:system} describes the
-system and evaluates it against ten secure design principles; Section~\ref{sec:lifecycle}
-describes the security activities per lifecycle phase; Section~\ref{sec:cra} presents the
-Cyber Resilience Act quick-scan; Section~\ref{sec:conclusion} concludes.
-\acused{PSD2}\acused{DORA}\acused{GDPR}\acused{SCA}\acused{CRA}\acused{SBOM}\acused{SSDL}\acused{SSDF}\acused{SAMM}
+This paper plans a \ac{SSDL} for SecureBank~PT, the mobile application of a
+Portuguese retail bank. The plan follows the NIST \ac{SSDF}
+(SP~800-218)~\cite{nist800218} and uses OWASP \ac{SAMM}~v2~\cite{samm} to
+measure maturity. The design binds authentication to the device with
+biometrics and a six-digit \ac{PIN} instead of SMS \acp{OTP}, keeps
+sessions short, signs every sensitive operation and executes transfers
+as atomic and idempotent operations. Section~\ref{sec:system} describes
+the system and its design principles, Section~\ref{sec:lifecycle} the
+lifecycle plan, Section~\ref{sec:cra} the \ac{CRA} quick-scan and
+Section~\ref{sec:ai} the use of AI tools. Section~\ref{sec:conclusion}
+concludes the paper.

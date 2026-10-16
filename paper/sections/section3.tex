@@ -1,7 +1,7 @@
-\section{Secure Life Cycle Description}
+\section{Secure Lifecycle Plan}
 \label{sec:lifecycle}
 
-SecureBank PT is developed in two-week sprints, security activities
+SecureBank~PT is developed in two-week sprints, and security activities
 are part of each sprint and of the \ac{CI/CD} pipeline. The plan selects practices from NIST \ac{SSDF}~\cite{nist800218},
 Microsoft \ac{SDL}~\cite{mssdl} and McGraw's touchpoints~\cite{mcgraw2006},
 and uses the OWASP \ac{MASVS}~\cite{masvs} as the verification baseline for
@@ -21,44 +21,38 @@ mapping, and the \textbf{\ac{PSIRT}}, chaired by the bank CISO, handles
 vulnerabilities and incidents after release.
 
 \subsection{Training}
-Before committing code, each team member completes training according to
-their role. Developers cover the OWASP Mobile and \ac{API} Top~10 in
-Kotlin, Swift and Java, testers cover \ac{MASVS}, and product owners cover
-abuse cases and social-engineering fraud in MB WAY. It is repeated
-yearly and after major incidents, with records kept by the SC.
+Before committing code, developers complete training on the OWASP Mobile
+and \ac{API} Top~10, testers on \ac{MASVS}, and product owners on abuse
+cases and MB~WAY fraud. It is repeated yearly and after major incidents.
 
 \subsection{Requirements}
-Requirements R1--R9 are written as testable user stories, for example ``a
-session token older than 5~minutes is rejected''. Each function has at
+Requirements R1--R9 are written as testable user stories, for example ``an
+access token older than 5~minutes is rejected''. Each function has at
 least one abuse case~\cite{mcgraw2006}, such as enrolling a second device
 with a stolen \ac{PIN}, replaying a signed transfer, or a coerced customer
 sending money to a mule account. The CO maps them to \ac{PSD2},
-\ac{GDPR} and \ac{CRA} Annex~I in a traceability matrix.
-
-\subsection{Non-Functional Requirements}
-The security requirements are refined into measurable
-Non-Functional Requirements (NFRs). They define acceptance thresholds
-rather than implementation choices, and are verified in the pipeline or
-before release. Table~\ref{tab:nfr} records the minimum targets and their
-traceability to R1--R9.
+\ac{GDPR} and \ac{CRA} Annex~I in a traceability matrix. The requirements
+are then refined into measurable non-functional requirements, which set
+acceptance thresholds rather than implementation choices and are verified
+in the pipeline or before release (Table~\ref{tab:nfr}).
 
 \begin{table}[!htbp]
-\caption{Measurable non-functional requirements and acceptance evidence}
+\caption{Measurable non-functional requirements (S: security, A: availability, I: integrity)}
 \label{tab:nfr}
 \centering
 \scriptsize
-\begin{tabularx}{\columnwidth}{@{}L{0.75cm}L{1.05cm}L{3.25cm}Y@{}}
+\begin{tabularx}{\columnwidth}{@{}L{0.75cm}L{4.15cm}Y@{}}
 \toprule
-\textbf{ID} & \textbf{Quality} & \textbf{Acceptance target} & \textbf{Traceability and evidence} \\
+\textbf{ID} & \textbf{Acceptance target} & \textbf{Traceability and evidence} \\
 \midrule
-NFR-S1 & Security & 100\% of protected endpoints enforce authenticated and authorised access; zero unauthorised requests in negative tests. & R1, R3, R4; API security and access-control reports \\
-NFR-S2 & Security & 100\% of sensitive operations require device-bound MFA and a signature covering the operation data; replay and altered-data tests fail. & R2, R4; mobile/API tests and \ac{MASVS} results \\
-NFR-S3 & Security & No plaintext sensitive data or secrets in release artefacts; TLS~1.3 in transit and AES-256-GCM, or an approved equivalent, at rest. & R5, R8; MobSF, secret-scan and configuration reports \\
-NFR-S4 & Security & Every authentication attempt is logged with outcome and correlation ID; brute-force detection raises a \ac{SIEM} alert within 60 seconds. & R9; log-schema test and alert drill \\
-NFR-A1 & Availability & At 1,000 concurrent sessions and 100 requests/s, 99.9\% of valid requests complete within 2 seconds, without mixing users or sessions. & R6; k6 load report and isolation assertions \\
-NFR-A2 & Availability & A failed transfer leaves no partial state; recovery restores service within 30 minutes and loses no committed transaction. & R7; fault-injection, recovery and reconciliation reports \\
-NFR-I1 & Integrity & Each transfer is processed exactly once for a valid idempotency key; duplicate, replayed or tampered requests are rejected and audited. & R7, R9; API replay/fuzz tests and audit-log review \\
-NFR-I2 & Integrity & A release is deployable only when its signed \ac{SBOM} and artefact signatures verify successfully on every node. & R8; \ac{CI/CD} gate and deployment verification record \\
+NFR-S1 & 100\% of protected endpoints enforce authenticated and authorised access; zero unauthorised requests in negative tests. & R1, R3, R4; \ac{API} security and access-control reports \\
+NFR-S2 & 100\% of sensitive operations require device-bound \ac{MFA} and a signature covering the operation data; replay and altered-data tests fail. & R2, R4; mobile/API tests and \ac{MASVS} results \\
+NFR-S3 & No plaintext sensitive data or secrets in release artefacts; TLS~1.3 in transit and AES-256-GCM, or an approved equivalent, at rest. & R5, R8; MobSF, secret-scan and configuration reports \\
+NFR-S4 & Every authentication attempt is logged with outcome and correlation ID; brute-force detection raises a \ac{SIEM} alert within 60 seconds. & R9; log-schema test and alert drill \\
+NFR-A1 & At 1,000 concurrent sessions and 100 requests/s, 99.9\% of valid requests complete within 2 seconds, without mixing users or sessions. & R6; k6 load report and isolation assertions \\
+NFR-A2 & A failed transfer leaves no partial state; recovery restores service within 30 minutes and loses no committed transaction. & R7; fault-injection, recovery and reconciliation reports \\
+NFR-I1 & Each transfer is processed exactly once for a valid idempotency key; duplicate, replayed or tampered requests are rejected and audited. & R7, R9; \ac{API} replay/fuzz tests and audit-log review \\
+NFR-I2 & A release is deployable only when its signed \ac{SBOM} and artefact signatures verify successfully on every node. & R8; \ac{CI/CD} gate and deployment verification record \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -109,16 +103,16 @@ twice a year, including the \ac{CRA} and \ac{DORA} reporting deadlines.
 \label{tab:lifecycle}
 \centering
 \scriptsize
-\begin{tabularx}{\columnwidth}{@{}L{1.30cm}Y L{1.05cm}Y@{}}
+\begin{tabularx}{\columnwidth}{@{}L{1.55cm}Y L{0.95cm}Y@{}}
 \toprule
 \textbf{Phase} & \textbf{Activities} & \textbf{Owner} & \textbf{Tools and evidence} \\
 \midrule
-Training & Role-based secure coding (Kotlin, Swift, Java); mobile pitfalls; phishing and social-engineering awareness; yearly refresh & SC, CO & OWASP MASTG labs, Secure Code Warrior, internal LMS; Training records per person, quiz scores (\ac{CRA}/\ac{DORA} audit evidence) \\
-Requirements & Security requirements R1--R9 as user stories; abuse cases per function; compliance mapping (\ac{PSD2} \ac{SCA}, \ac{GDPR}, \ac{CRA} Annex~I) & PO, SA, CO & Jira (security labels), \ac{MASVS} with L2 and R profiles; Security requirements catalogue, abuse-case list, traceability matrix \\
-Design & \ac{STRIDE} threat modelling on the \ac{DFD}; architecture review; crypto and trust design (keys in \ac{HSM} and secure element) & SA, SC & OWASP Threat Dragon, draw.io; Threat model, design review minutes, crypto inventory \\
-Implementation & Secure coding standard; peer review with security checklist; \ac{SAST}, dependency and secret scanning on every merge request; \ac{SBOM} generation & DEV, SC, DSO & Semgrep, SonarQube, MobSF (static), OWASP Dependency-Track, CycloneDX, Gitleaks; Clean \ac{SAST} gate, review logs, signed \ac{SBOM} per build \\
-Verification & \ac{DAST} of the \ac{API}; mobile dynamic tests; fuzzing of \ac{API} parsers; robustness and load tests; external pentest before release & QA, external & OWASP ZAP, MobSF (dynamic), Frida, Jazzer, k6; Test reports, fuzzing coverage, pentest report, residual-risk list \\
-Release \& Operations & Final security review (go/no-go); code and app signing; \ac{IRP}; \ac{SIEM} monitoring; vulnerability disclosure and patching & PO, DSO, \ac{PSIRT} & Sigstore/cosign, Play/App Store signing, Wazuh \ac{SIEM}, security.txt; Go/no-go record, \ac{IRP} runbook, advisories, patch SLA metrics \\
+Training & Role-based secure coding; mobile and \ac{API} pitfalls; social-engineering awareness; yearly refresh & SC, CO & OWASP MASTG labs, internal LMS; training records, quiz scores \\
+Requirements & R1--R9 as user stories; abuse cases; compliance mapping (\ac{PSD2}, \ac{GDPR}, \ac{CRA}) & PO, SA, CO & Jira, \ac{MASVS} L2 and R; requirements catalogue, traceability matrix \\
+Design & \ac{STRIDE} on the \ac{DFD}; architecture review; key management design & SA, SC & OWASP Threat Dragon; threat model, review minutes, crypto inventory \\
+Implementation & Secure coding standard; peer review; \ac{SAST}, dependency and secret scanning; \ac{SBOM} & DEV, SC, DSO & Semgrep, MobSF, Dependency-Track, Gitleaks, CycloneDX; review logs, signed \ac{SBOM} \\
+Verification & \ac{DAST} of the \ac{API}; mobile dynamic tests; fuzzing; load tests; external pentest & QA, external & OWASP ZAP, Frida, Jazzer, k6; test and pentest reports, residual-risk list \\
+Release \& Operations & Go/no-go review; artefact signing; \ac{SIEM} monitoring; disclosure and patching; \ac{IRP} & PO, DSO, \ac{PSIRT} & Sigstore, Wazuh, security.txt; go/no-go record, advisories, patch metrics \\
 \bottomrule
 \end{tabularx}
 \end{table}

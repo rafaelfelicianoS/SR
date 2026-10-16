@@ -1,84 +1,54 @@
 \section{Cyber Resilience Act Quick-Scan}
 \label{sec:cra}
 
-% TODO: Cyber Resilience Act (CRA - Regulation (EU) 2024/2847) Quick-Scan for SecureBank PT
-%
-% 1. Product Scope and Classification:
-%    - Define product boundary: Mobile banking application (Android/iOS) distributed to consumers
-%      qualifies as a "Product with Digital Elements" (PDE) under CRA Article 2.
-%    - Delineate boundary with backend/cloud banking services covered under DORA (Regulation (EU) 2022/2554)
-%      and NIS2 (Directive (EU) 2022/2555).
-%    - CRA category assessment: Standard product with digital elements vs. Important/Critical product
-%      (Annex III/IV) based on authentication and financial access role.
-%
-% 2. Applicable Essential Requirements (Annex I):
-%    - Part I (Security Properties): Secure by default, protection from unauthorised access, data confidentiality
-%      and integrity, least privilege, encrypted communications, minimal attack surface.
-%    - Part II (Vulnerability Handling): Maintain an automated, machine-readable Software Bill of Materials
-%      (SBOM) in CycloneDX/SPDX; establish Coordinated Vulnerability Disclosure (security.txt); deliver security-only
-%      patches separated from feature updates; define support period commitment.
-%
-% 3. Compliance Deadlines and Reporting Obligations:
-%    - 11 September 2026: Mandatory reporting of actively exploited vulnerabilities and severe incidents
-%      within 24 hours (early warning) to CSIRT / CNCS and ENISA.
-%    - 11 December 2027: Full application of CRA requirements (conformity assessment, CE marking, EU declaration
-%      of conformity, technical documentation file).
-%
-% 4. National Supervision:
-%    - Supervision and market surveillance authority in Portugal: Centro Nacional de Cibersegurança (CNCS).
+This section checks whether SecureBank~PT is in scope of the \ac{CRA}
+(Regulation (EU) 2024/2847)~\cite{cra}, which obligations apply and when.
 
-The \ac{CRA} (Regulation (EU) 2024/2847)~\cite{cra} introduces mandatory cybersecurity requirements for digital
-products in the EU market. This section addresses the applicability of the \ac{CRA} to SecureBank PT, as it
-identifies its core obligations, and establishes the necessary compliance timelines.
+\subsection{Scope and Classification}
+The \ac{CRA} applies to products with digital elements whose intended use
+includes a data connection to a device or network (Article~2). The mobile
+application is software distributed to consumers through the app stores
+as part of the commercial activity of the bank, so it is in scope and the
+bank is its manufacturer. The fact that the application is free does not exclude it from scope. The
+\ac{API} gateway and the mobile backend are needed for the application to
+work, so they count as its remote data processing and are also covered.
+The core banking system and the SIBS network are not part of the product.
+They are ICT systems of a financial entity and are governed by
+\ac{DORA}~\cite{dora} and \ac{NIS2}.
 
-\subsection{Scope and Regulatory Boundaries}
-Under Article~2, the \ac{CRA} applies to all software and hardware products whose intended purpose includes
-logical or physical data connections. The SecureBank PT mobile banking application falls, therefore, in the
-scope of the \ac{CRA}.
+The application is not listed in Annex~III or Annex~IV. Although it
+authenticates users, it is not an identity management product, so it
+falls in the default category. Therefore, conformity can be shown by
+internal control (Module~A) without a notified body, but the essential
+requirements of Annex~I apply in full.
 
-In contrast, the core banking backend, transaction databases and payment processing services are cloud and
-financial entity infrastructures. As such, these operational environments are primarily governed by the
-\ac{DORA}~\cite{dora} and the \ac{NIS2} Directives. While the \ac{DORA} regulates the operational resilience
-and the risk towards the financial intitution, the \ac{CRA} regulates the software delivered directly to
-consumer devices. Due to the fact that the application handles user authentication credentials, binding
-financial transactions, it must satisfy rigorous conformity assessments proportional to high-risk consumer
-software.
+\subsection{Applicable Obligations}
+Part~I of Annex~I covers the properties of the product. SecureBank~PT is
+released without known exploitable vulnerabilities and secure by default.
+Unauthorised access is prevented by R1--R4, data is encrypted in transit
+and at rest (R8), and integrity is protected by signed operations,
+certificate pinning and root and tamper detection. Debug interfaces and
+unused libraries are removed from release builds to reduce the attack
+surface, and security events are logged (R9).
 
+Part~II covers vulnerability handling. Each build produces a signed
+CycloneDX \ac{SBOM}, the bank publishes a coordinated vulnerability
+disclosure policy through \texttt{security.txt}, and security fixes are
+free and released separately from feature updates whenever possible. The
+support period is five years, the minimum set by Article~13 unless the
+product is expected to be used for less time. The bank must also keep the technical
+documentation, sign the EU declaration of conformity and affix the CE
+marking.
 
-\subsubsection{Essential Requirements}
-SecureBank PT is designed and delivered following the \emph{secure by default}:
-\begin{itemize}
-    \item \textbf{Access and Integrity:} the app rejects tampered or rooted environments and enforces
-    validation of server identity through strict certificate pinning over TLS~1.3,
-
-    \item \textbf{Data Protection and Attack Surface:} sensitive financial assets and personal data are
-    encrypted in transit and at rest (R8). Debug interfaces and unnecessary third-party libraries are excluded
-    from release builds to minimise the attack surface.
-\end{itemize}
-
-
-\subsubsection{Vulnerability Handling}
-To ensure active vulnerability management throughout the product lifecycle, several measures were put in place.
-Everytime a build pipeline is run, it automatically compiles and signs a machine-readable \ac{SBOM} in the CycloneDX
-format, listing all third-party dependencies and SDKs to allow for vulnerability triaging.
-The bank also publishes a Coordinated Vulnerability Disclosure (CVD) policy via standardised \texttt{security.txt}
-files. Security updates are issued promptly and separated from feature updates whenever possible. The software has a
-guaranteed 5-year (minimum) security maintenace window.
-
-\subsection{Obligations, Timelines, and National Supervision}
-The \ac{CRA} sets binding milestones that dictate the deployment and operational schedule:
-
-\begin{enumerate}
-    \item \textbf{Early Warning and Incident Reporting (11 September 2026):}
-    Manufacturers must report any actively exploited vulnerability or severe security incident within $24$ hours of
-    awareness to the competent national authority and \ac{ENISA}, followed by a detailed incident report within $72$
-    hours.
-
-    \item \textbf{Full Application (11 December 2027):}
-    All essential requirements mentioned in the previous Section , assessment documentation, CE marking, and the EU
-    declaration of conformity become legally enforceable for new releases.
-\end{enumerate}
-
-Within Portugal, the \ac{CNCS} serves as the designated national authority for market surveillance and
-supervision under the \ac{CRA}. To ensure compliance with mandatory reporting obligations, the bank's \ac{PSIRT}
-and Compliance Officer should established direct communication channels with the \ac{CNCS}.
+\subsection{Timeline and Reporting}
+The reporting obligations of Article~14 apply since 11~September~2026, so
+they already bind the bank. An actively exploited vulnerability or a
+severe incident requires an early warning within 24~hours, a notification
+within 72~hours and a final report, submitted through the \ac{ENISA}
+single reporting platform to the national \ac{CSIRT} acting as
+coordinator, which in Portugal is CERT.PT within the \ac{CNCS}. The
+remaining obligations apply from 11~December~2027, after which no release
+can be placed on the market without the conformity assessment and CE
+marking. A severe incident in the backend may also be a major ICT incident
+under \ac{DORA}, reported to Banco de Portugal, so the \ac{PSIRT} and the
+CO keep a single \ac{IRP} with both sets of deadlines.
