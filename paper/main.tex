@@ -12,6 +12,7 @@
 \usepackage{tabularx}
 \usepackage{multirow}
 \usepackage{array}
+\usepackage{multicol}
 \usepackage[hidelinks]{hyperref}
 \usepackage[nohyperlinks]{acronym}
 
@@ -73,8 +74,9 @@ secure software lifecycle, SSDL, mobile banking, NIST SSDF, OWASP SAMM, security
 
 \input{sections/annexes}
 
-\twocolumn
+\begin{multicols}{2}
 \bibliographystyle{IEEEtran}
 \bibliography{biblio}
+\end{multicols}
 
 \end{document}
