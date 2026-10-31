@@ -25,6 +25,7 @@ jobs:
         run: |
           mkdir -p public
           cp paper/main.pdf public/main.pdf
+          echo '<meta http-equiv="refresh" content="0; url=main.pdf">' > public/index.html
 
       - uses: actions/upload-pages-artifact@v3
         with:
@@ -42,3 +43,5 @@ jobs:
     steps:
       - uses: actions/deploy-pages@v4
         id: deployment
+      - name: Add PDF link to summary
+        run: echo "📄 [Ver PDF](${{ steps.deployment.outputs.page_url }}main.pdf)" >> $GITHUB_STEP_SUMMARY
