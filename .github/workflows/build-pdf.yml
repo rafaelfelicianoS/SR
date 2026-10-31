@@ -24,7 +24,7 @@ jobs:
       - name: Prepare pages folder
         run: |
           mkdir -p public
-          cp main.pdf public/main.pdf
+          cp paper/main.pdf public/main.pdf
 
       - uses: actions/upload-pages-artifact@v3
         with:
