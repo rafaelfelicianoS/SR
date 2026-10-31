@@ -25,12 +25,12 @@ and the verification uses the tools of Table~\ref{tab:lifecycle}.
 
 \subsection{Coverage and Traceability}
 
-The catalogue has 22 requirements: five for confidentiality, five for
-integrity, four for availability, seven for authentication,
-authorisation and accountability, and one assurance requirement. Three
-apply to users, \mbox{REQ-05} and \mbox{REQ-19} to the Customer and \mbox{REQ-18} to the
+The catalogue has 23 requirements: five for confidentiality, five for
+integrity, four for availability, eight for authentication,
+authorisation and accountability, and one assurance requirement. Four
+apply to users, \mbox{REQ-05}, \mbox{REQ-19} and \mbox{REQ-22} to the Customer and \mbox{REQ-18} to the
 Admin, and the other 19 apply to the system. Every threat of Annex~B is
-answered, and T01 (stolen \ac{PIN}) is answered at four layers. \ac{PSD2} maps to \mbox{REQ-06} and \mbox{REQ-15}, \ac{GDPR} to \mbox{REQ-02} to
+answered, and T01 (stolen \ac{PIN}) is answered at five layers. \ac{PSD2} maps to \mbox{REQ-06} and \mbox{REQ-15}, \ac{GDPR} to \mbox{REQ-02} to
 \mbox{REQ-04}, \ac{DORA} to \mbox{REQ-14} and \mbox{REQ-21}, and the \ac{CRA} essential
 requirements to \mbox{REQ-01}, \mbox{REQ-02}, \mbox{REQ-09} and \mbox{REQ-10}.
 
@@ -41,6 +41,6 @@ are renewed silently while the user is active. A strict lockout would let
 an attacker lock customers out, so \mbox{REQ-13} blocks only one device and
 keeps recovery open, and \mbox{REQ-12} limits devices instead of IP addresses.
 The main residual risk is a deceived customer who authorises a transfer
-to a mule account with every factor present. \mbox{REQ-05} and \mbox{REQ-20} reduce it
+to a mule account with every factor present. \mbox{REQ-05}, \mbox{REQ-20} and \mbox{REQ-22} reduce it
 but cannot remove it, so it is recorded in the residual-risk list signed
 by the PO.
