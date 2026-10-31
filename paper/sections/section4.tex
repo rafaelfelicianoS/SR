@@ -4,6 +4,50 @@
 This section checks whether SecureBank~PT is in scope of the \ac{CRA}
 (Regulation (EU) 2024/2847)~\cite{cra}, which obligations apply and when.
 
+\begin{table*}[!t]
+\caption{Security requirements catalogue}
+\label{tab:req}
+\centering
+\scriptsize
+\begin{tabularx}{\textwidth}{@{}L{0.85cm}Y@{\hspace{4pt}}c@{\hspace{4pt}}c@{\hspace{4pt}}L{3.4cm}L{1.3cm}L{3.3cm}@{}}
+\toprule
+\textbf{ID} & \textbf{Requirement} & \textbf{Type} & \textbf{Actor} & \textbf{Rationale} & \textbf{Trace} & \textbf{Verification} \\
+\midrule
+\multicolumn{7}{@{}l}{\textit{Confidentiality}} \\
+REQ-01 & The mobile application shall abort any connection to the \ac{API} gateway that does not use TLS~1.3 with a server key matching a pinned key. & N & Sys & Blocks interception through a rogue or user-installed certificate. & T12; R8 & Proxy test with a user-installed CA fails \\
+REQ-02 & The backend shall store account, transaction and personal data, including backups, encrypted with AES-256-GCM, with the keys held in the \ac{HSM}. & N & Sys & A stolen copy is unreadable without the \ac{HSM}; \ac{GDPR} Art.~32. & T15; R8 & Configuration review; inspection of a restored backup \\
+REQ-03 & The mobile application shall keep the device key, tokens and account data only in the platform keystore. & F & Sys & A lost or rooted device exposes no data in files or logs. & T13; R4, R8 & MobSF; file-system inspection on a rooted device \\
+REQ-04 & The backend shall verify, on every request, that the requested account, card or transaction belongs to the authenticated customer. & F & Sys & Broken object-level authorisation is the first risk of the OWASP \ac{API} Top~10~\cite{owaspapi}. & T14; R1 & Negative \ac{API} tests with two test customers \\
+REQ-05 & The customer shall enter the \ac{PIN} and the matrix card codes only in the SecureBank~PT application. & F & Cus & Phishing pages and vishing calls ask the customer directly for these codes. & T01, T03; R2, R5 & Acceptance recorded at enrolment \\
+\midrule
+\multicolumn{7}{@{}l}{\textit{Integrity}} \\
+REQ-06 & The backend shall execute a transfer, MB~WAY payment or card limit change only when it carries a signature by the device key over the amount, payee, timestamp and nonce. & F & Sys & Dynamic linking of \ac{PSD2} \ac{SCA}~\cite{psd2rts}; any change invalidates the signature. & T06, T10; R2, R4 & Altered-data \ac{API} tests \\
+REQ-07 & The backend shall reject a transfer whose idempotency key or nonce was already used or whose timestamp is older than 60~seconds. & F & Sys & Stops replay and double debits when the client retries. & T07; R7 & Replay tests; Jazzer fuzzing \\
+REQ-08 & The backend shall commit each transfer atomically, so that a failure at any step leaves neither a partial debit nor a partial credit. & F & Sys & Keeps balances consistent when a component fails. & T09; R7 & Fault injection; daily reconciliation \\
+REQ-09 & The backend shall write every authentication, transfer and administrative action to an append-only, hash-chained audit log with actor, time, operation and outcome. & F & Sys & Evidence against denial of actions; edited or deleted records are detected. & T10, T11, T20; R9 & Chain verification after a tampering attempt \\
+REQ-10 & The deployment pipeline shall deploy a release only to nodes where the signatures of the artefacts and of the \ac{SBOM} verify. & F & Sys & Blocks tampered builds and partial releases~\cite{knight2013}; \ac{CRA} Annex~I. & T08; R8 & Deployment of an unsigned artefact fails \\
+\midrule
+\multicolumn{7}{@{}l}{\textit{Availability}} \\
+REQ-11 & At 1,000 concurrent sessions and 100 requests per second, the system shall complete 99.9\% of valid requests within 2~seconds. & N & Sys & Capacity for peak days, such as salary days. & T16; R6 & k6 load test \\
+REQ-12 & The \ac{API} gateway shall answer with HTTP~429 every request above 10 per second from the same enrolled device. & F & Sys & Mobile customers share carrier NAT addresses, so the limit is set per device. & T16; R6 & k6 test with one flooding device \\
+REQ-13 & After five consecutive wrong \acp{PIN}, the system shall block \ac{PIN} entry on that device for 15~minutes, while recovery with the matrix card stays available. & F & Sys & Stops guessing without letting an attacker lock customers out of every channel. & T01, T17; R5, R9 & Lockout and recovery tests \\
+REQ-14 & After a failure of the primary data centre, the system shall restore transfers within 30~minutes from a second region, with no loss of committed transactions. & N & Sys & Operational resilience required by \ac{DORA}~\cite{dora}, including ransomware. & T18; R7 & Failover drill twice a year \\
+\midrule
+\multicolumn{7}{@{}l}{\textit{Authentication, authorisation and accountability}} \\
+REQ-15 & The system shall require, for login and for each sensitive operation, the device-bound key together with biometrics or the six-digit \ac{PIN}. & F & Sys & Two factors as required by \ac{PSD2} \ac{SCA}; a phished \ac{PIN} alone is not enough. & T01--T04; R2, R4 & Single-factor attempts fail \\
+REQ-16 & The system shall reject access tokens older than 5~minutes or presented without proof of possession of the device key. & N & Sys & A stolen token cannot be reused from another device. & T02; R3 & Token replay from a second device \\
+REQ-17 & The backend shall accept no customer token on back-office endpoints and no admin token on payment endpoints. & F & Sys & Least privilege: an Admin cannot move money. & T19; R1 & Role-matrix \ac{API} tests \\
+REQ-18 & The Admin shall obtain the approval of a second Admin before freezing an account or using \ac{BtG} access. & F & Adm & Four-eyes rule against insider abuse. & T11, T20; R7 & Quarterly audit of \ac{BtG} records \\
+REQ-19 & The customer shall report the loss or theft of an enrolled device to the bank without undue delay. & F & Cus & Duty of the payer under \ac{PSD2} Art.~69. & T04; R5 & Duty in the contract accepted at enrolment \\
+REQ-20 & The mobile application shall require a second confirmation for a transfer to a new payee whose name does not match the verification of payee. & F & Sys & Mandatory under Regulation (EU) 2024/886~\cite{instantpay}; counters payee impersonation. & T05 & UI tests with non-matching payees \\
+REQ-21 & The \ac{SIEM} shall raise an alert within 60~seconds when one source fails more than 20 logins per minute. & N & Sys & Detects credential stuffing and lockout campaigns. & T01, T16, T17; R9 & Alert drill with replayed traffic \\
+\midrule
+\multicolumn{7}{@{}l}{\textit{Assurance}} \\
+REQ-22 & Each major release shall pass a penetration test by an independent team with no open critical or high finding, unless the PO signs the residual risk. & As & Sys & Evidence that the controls hold against a skilled attacker. & T06, T12, T14, T19 & Pentest report \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
 \subsection{Scope and Classification}
 The \ac{CRA} applies to products with digital elements whose intended use
 includes a data connection to a device or network (Article~2). The mobile

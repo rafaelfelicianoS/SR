@@ -82,6 +82,6 @@ if [ "$KEEP_AUX" -eq 0 ]; then
 fi
 
 echo "==> Done! Output PDF: $PAPER_DIR/main.pdf${PAGES:+ ($PAGES pages)}"
-if [ -n "$PAGES" ] && [ "$PAGES" -gt 4 ]; then
-    echo "!! Warning: the paper has more than 4 pages (limit of the assignment)."
+if [ -n "$PAGES" ] && [ "$PAGES" -gt 7 ]; then
+    echo "!! Warning: the paper has more than 7 pages, annexes excluded."
 fi

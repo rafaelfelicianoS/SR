@@ -30,7 +30,7 @@
 \IEEEauthorblockN{Rafael Feliciano Soares, Guilherme Almiro Viana Fernandes Tavares, Francisco Antunes dos Reis,\\
 Pedro Miguel Paulo Martins, Pedro Miguel dos Santos Marques}
 \IEEEauthorblockA{\textit{Mestrado em Cibersegurança}, Universidade de Aveiro, Portugal\\
-\{rafael, gavftavares, franciscoareis, pedropmartins, pmsmarques\}@ua.pt}
+\{rafael.feliciano, gavftavares, franciscoareis, pedropmartins, pmsmarques\}@ua.pt}
 }
 
 \maketitle
@@ -38,21 +38,27 @@ Pedro Miguel Paulo Martins, Pedro Miguel dos Santos Marques}
 \begin{abstract}
 This paper presents the secure planning of SecureBank~PT, a mobile banking
 application for a Portuguese retail bank that provides transfers, MB~WAY
-payments and card controls. The plan follows the NIST Secure Software
-Development Framework (SSDF) and uses OWASP SAMM~v2 to measure maturity.
+payments and card controls. The goal is an application that is reliable,
+robust and secure: it keeps serving customers under load and component
+failures, rejects malformed, replayed and tampered requests, and protects
+the money and personal data of its customers. The plan follows the NIST
+Secure Software Development Framework (SSDF) and uses OWASP SAMM~v2 to
+measure maturity.
 A review of the initial design against ten secure design principles found
 three violations: complete mediation, least common mechanism and
 psychological acceptability. They are mitigated with short sessions and
 step-up multi-factor authentication, isolation of internal services, and
 biometrics with a six-digit PIN. For each lifecycle phase, the plan
-defines the activities, owner, tools and evidence, and the security
-requirements are refined into measurable non-functional requirements.
-Finally, a Cyber Resilience Act quick-scan confirms that the application
-is in scope and identifies the obligations that apply and their deadlines.
+defines the activities, owner, tools and evidence. A Cyber Resilience Act
+quick-scan confirms that the application is in scope and identifies the
+obligations that apply and their deadlines. Finally, the security
+requirements are refined into a catalogue of 22 verifiable requirements,
+each traced to a STRIDE threat on the data-flow diagram and to a
+verification method.
 \end{abstract}
 
 \begin{IEEEkeywords}
-secure software lifecycle, SSDL, mobile banking, NIST SSDF, OWASP SAMM, threat modelling, multi-factor authentication, Cyber Resilience Act
+secure software lifecycle, SSDL, mobile banking, NIST SSDF, OWASP SAMM, security requirements, threat modelling, STRIDE, multi-factor authentication, Cyber Resilience Act
 \end{IEEEkeywords}
 
 \input{acronymlist}
@@ -63,7 +69,11 @@ secure software lifecycle, SSDL, mobile banking, NIST SSDF, OWASP SAMM, threat m
 \input{sections/section4}
 \input{sections/section5}
 \input{sections/section6}
+\input{sections/section7}
 
+\input{sections/annexes}
+
+\twocolumn
 \bibliographystyle{IEEEtran}
 \bibliography{biblio}
 

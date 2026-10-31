@@ -1,18 +1,46 @@
-\section{AI Usage Statement}
-\label{sec:ai}
+\section{Security Requirements Catalogue}
+\label{sec:catalogue}
 
-Following the course AI-use policy, the team declares the use of
-Claude (Anthropic) and Antigravity (Gemini) in three tasks. First, to
-generate the TikZ code of the context diagram (Figure~\ref{fig:context})
-and the \LaTeX{} code of the tables, from content defined by the team.
-Second, to organise the non-functional requirements, initially listed in
-Section~\ref{sec:system}, into the structure that the team then converted
-into Table~\ref{tab:nfr}. Third, to review the text of the paper and point
-out errors in grammar, consistency and regulatory statements.
+This section refines the stakeholder requirements R1--R9 into a catalogue
+of verifiable system security requirements. The measurable
+non-functional requirements of the first version of the plan are now
+part of this catalogue.
 
-The case system, the requirements R1--R9, the design principles
-assessment, the lifecycle plan and the \ac{CRA} analysis were defined by
-the team. The AI output was kept only after being checked, and the
-suggested corrections were edited or discarded when they did not match
-the design or the sources. The authors reviewed all the content,
-including the regulatory references, and take full responsibility for it.
+\subsection{Method}
+
+The requirements follow the risk process of NIST SP~800-160~\cite{nist800160v1}.
+The team identified the assets (device key and \ac{PIN}, tokens, account
+data and money, transfer orders, audit log, \ac{HSM} keys and release
+artefacts), drew the level-1 \ac{DFD} of Annex~A and applied \ac{STRIDE}
+to each of its elements~\cite{shostack2014}. This gave the 20 threats of
+Annex~B. Each threat is answered by at least one requirement and each
+requirement traces back to at least one threat, so there are no orphans.
+
+Each requirement has one ``shall'', names the actor and uses numbers
+instead of adjectives~\cite{hooks1993}. Table~\ref{tab:req} gives its
+type, functional~(F), non-functional~(N) or assurance~(As), and whether
+it applies to the system~(Sys), the Customer~(Cus) or the Admin~(Adm).
+The \emph{Trace} column links it to the threats of Annex~B and to R1--R9,
+and the verification uses the tools of Table~\ref{tab:lifecycle}.
+
+\subsection{Coverage and Traceability}
+
+The catalogue has 22 requirements: five for confidentiality, five for
+integrity, four for availability, seven for authentication,
+authorisation and accountability, and one assurance requirement. Three
+apply to users, \mbox{REQ-05} and \mbox{REQ-19} to the Customer and \mbox{REQ-18} to the
+Admin, and the other 19 apply to the system. Every threat of Annex~B is
+answered, and T01 (stolen \ac{PIN}) is answered at four layers. \ac{PSD2} maps to \mbox{REQ-06} and \mbox{REQ-15}, \ac{GDPR} to \mbox{REQ-02} to
+\mbox{REQ-04}, \ac{DORA} to \mbox{REQ-14} and \mbox{REQ-21}, and the \ac{CRA} essential
+requirements to \mbox{REQ-01}, \mbox{REQ-02}, \mbox{REQ-09} and \mbox{REQ-10}.
+
+\subsection{Conflicts and Residual Risk}
+
+Short tokens (\mbox{REQ-16}) work against psychological acceptability, so tokens
+are renewed silently while the user is active. A strict lockout would let
+an attacker lock customers out, so \mbox{REQ-13} blocks only one device and
+keeps recovery open, and \mbox{REQ-12} limits devices instead of IP addresses.
+The main residual risk is a deceived customer who authorises a transfer
+to a mule account with every factor present. \mbox{REQ-05} and \mbox{REQ-20} reduce it
+but cannot remove it, so it is recorded in the residual-risk list signed
+by the PO.

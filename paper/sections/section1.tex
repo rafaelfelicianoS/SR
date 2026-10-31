@@ -39,11 +39,14 @@ exploited vulnerabilities.
 This paper plans a \ac{SSDL} for SecureBank~PT, the mobile application of a
 Portuguese retail bank. The plan follows the NIST \ac{SSDF}
 (SP~800-218)~\cite{nist800218} and uses OWASP \ac{SAMM}~v2~\cite{samm} to
-measure maturity. The design binds authentication to the device with
+measure maturity, with the goal of an application that is reliable,
+robust and secure. The design binds authentication to the device with
 biometrics and a six-digit \ac{PIN} instead of SMS \acp{OTP}, keeps
 sessions short, signs every sensitive operation and executes transfers
 as atomic and idempotent operations. Section~\ref{sec:system} describes
 the system and its design principles, Section~\ref{sec:lifecycle} the
-lifecycle plan, Section~\ref{sec:cra} the \ac{CRA} quick-scan and
+lifecycle plan, Section~\ref{sec:cra} the \ac{CRA} quick-scan,
+Section~\ref{sec:catalogue} the security requirements catalogue and
 Section~\ref{sec:ai} the use of AI tools. Section~\ref{sec:conclusion}
-concludes the paper.
+concludes the paper. The annexes contain the data-flow diagram and the
+threat table.
