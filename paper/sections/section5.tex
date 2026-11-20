@@ -21,13 +21,21 @@ instead of adjectives~\cite{hooks1993}. Table~\ref{tab:req} gives its
 type, functional~(F), non-functional~(N) or assurance~(As), and whether
 it applies to the system~(Sys), the Customer~(Cus) or the Admin~(Adm).
 The \emph{Trace} column links it to the threats of Annex~B and to R1--R9,
-and the verification uses the tools of Table~\ref{tab:lifecycle}.
+and the verification uses the tools of Table~\ref{tab:lifecycle}. The
+groups of the catalogue name the quality characteristics and
+sub-characteristics of ISO/IEC~25010:2023~\cite{iso25010} that they
+address. Most fall under \emph{Security}, while the availability group
+also covers \emph{Reliability} and \emph{Performance efficiency}, and the
+assurance requirement provides evidence of \emph{resistance}, the
+sub-characteristic added in 2023 for a product that keeps operating
+under attack.
 
 \subsection{Coverage and Traceability}
 
 The catalogue has 23 requirements: five for confidentiality, five for
-integrity, four for availability, eight for authentication,
-authorisation and accountability, and one assurance requirement. Four
+integrity and non-repudiation, four for availability, recoverability
+and performance, eight for authenticity and accountability, and one
+for resistance. Four
 apply to users, \mbox{REQ-05}, \mbox{REQ-19} and \mbox{REQ-22} to the Customer and \mbox{REQ-18} to the
 Admin, and the other 19 apply to the system. Every threat of Annex~B is
 answered, and T01 (stolen \ac{PIN}) is answered at five layers. \ac{PSD2} maps to \mbox{REQ-06} and \mbox{REQ-15}, \ac{GDPR} to \mbox{REQ-02} to

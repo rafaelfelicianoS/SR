@@ -1,0 +1,3 @@
+crashes-id:000000,heap-buffer-overflow,READ of size 1,cJSON_Minify cJSON.c:2642,1,0,unterminated string literal
+crashes-id:000008,heap-buffer-overflow,READ of size 1,cJSON_Minify cJSON.c:2682,1,0,backslash before the terminator in a string
+crashes-id:000009,heap-buffer-overflow,READ of size 1,cJSON_Minify cJSON.c:2642,1,0,unterminated multiline comment

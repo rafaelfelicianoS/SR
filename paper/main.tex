@@ -55,11 +55,16 @@ quick-scan confirms that the application is in scope and identifies the
 obligations that apply and their deadlines. Finally, the security
 requirements are refined into a catalogue of 23 verifiable requirements,
 each traced to a STRIDE threat on the data-flow diagram and to a
-verification method.
+verification method. A security test plan then defines a grey-box
+penetration test with five attack types, a fuzz plan with ten attack
+vectors, and 21 test cases that cover all 23 requirements. A 15-minute
+AFL++ run on the cJSON parser found 68 crashing inputs in release
+1.7.10, from three out-of-bounds reads that match two published CVEs,
+and none in release 1.7.19.
 \end{abstract}
 
 \begin{IEEEkeywords}
-secure software lifecycle, SSDL, mobile banking, NIST SSDF, OWASP SAMM, security requirements, threat modelling, STRIDE, multi-factor authentication, Cyber Resilience Act
+secure software lifecycle, SSDL, mobile banking, NIST SSDF, OWASP SAMM, security requirements, threat modelling, STRIDE, multi-factor authentication, Cyber Resilience Act, penetration testing, fuzzing, AFL++
 \end{IEEEkeywords}
 
 \input{acronymlist}
@@ -69,6 +74,8 @@ secure software lifecycle, SSDL, mobile banking, NIST SSDF, OWASP SAMM, security
 \input{sections/section3}
 \input{sections/section4}
 \input{sections/section5}
+\input{sections/testplan}
+\input{sections/fuzzrun}
 \input{sections/section6}
 \input{sections/section7}
 

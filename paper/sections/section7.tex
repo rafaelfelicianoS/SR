@@ -8,6 +8,10 @@ a six-digit \ac{PIN}. The lifecycle plan assigns an owner, tools and
 evidence to each phase. The security requirements catalogue refines
 R1--R9 into 23 verifiable requirements, and the threat table shows that
 every \ac{STRIDE} threat on the data-flow diagram is answered by at least
-one of them. Under the \ac{CRA}, the bank must already report
+one of them. The security test plan gives every requirement at least
+one of 21 test cases, combining a grey-box penetration test of five
+attack types with ten fuzz vectors aimed at the parsers. A 15-minute
+AFL++ run under sanitizers found the known faults of the old cJSON
+release in under a second, and found nothing in the current release. Under the \ac{CRA}, the bank must already report
 exploited vulnerabilities, and releases from December~2027 must meet
 the essential requirements of \ac{CRA} Annex~I.

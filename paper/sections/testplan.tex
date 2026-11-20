@@ -1,0 +1,197 @@
+\section{Security Test Plan}
+\label{sec:testplan}
+
+This section plans the security tests of the SecureBank~PT release
+candidate. The scope is the product backend and its clients: the mobile
+application (P1), the back-office desktop (P2), the \ac{API} gateway (P3),
+the \ac{IAM} service (P4), the banking services (P5) and the \ac{CI/CD}
+pipeline (P6) of Figure~\ref{fig:dfd}. The core banking system and SIBS
+(EE3) belong to third parties and are replaced by a simulator. All tests
+run in a staging copy of TB3 with its own \ac{HSM} partition and
+synthetic customers, so no real personal data is used. A release enters
+testing when the pipeline gates of Section~\ref{sec:lifecycle} pass, and
+it leaves testing when every requirement has a passed test and no
+critical or high finding is open (\mbox{REQ-23}). The plan has three
+parts: a penetration-testing plan, a fuzz-testing plan and the mapping of
+every requirement of Table~\ref{tab:req} to at least one test. Test cases
+follow the ISO/IEC/IEEE 29119-3 template~\cite{iso29119}, and
+Annex~\ref{ann:tc04} gives one test case in full.
+
+\subsection{Penetration-Testing Plan}
+
+\textbf{Strategy.} The penetration test is grey-box and threat-led. The
+testers receive the \ac{DFD}, the threat table of Annex~B, the OpenAPI
+description of the gateway, release builds of the Android and iOS
+applications, and test accounts for two customers and two Admins. They do
+not receive the source code, so the test shows what an attacker with an
+account and the public application can do. The engagement follows the
+phases of \ac{PTES}~\cite{ptes}: pre-engagement, reconnaissance, threat
+modelling, vulnerability analysis, exploitation, post-exploitation and
+reporting. The OWASP \ac{WSTG}~\cite{wstg} is the checklist for the
+\ac{API} and the back-office, and the \ac{MASTG}~\cite{mastg} for the
+mobile application. Every finding is reported with reproducible steps,
+the threat it confirms, its impact and a proposed fix.
+
+\textbf{Tools.} nmap and testssl.sh map the exposed services and the TLS
+configuration. Burp Suite Professional is the main intercepting proxy,
+with the Autorize extension for access-control tests, and OWASP ZAP runs
+the automated scans that the pipeline already uses. jwt\_tool tests the
+tokens. On the mobile side, jadx and MobSF are used for static review of
+the release builds, apktool for repackaging, and Frida with objection for
+runtime instrumentation on a rooted Android device and a jailbroken iOS
+device. sqlmap is used only on the back-office search fields, and k6
+generates controlled load for the rate-limit tests.
+
+\textbf{Attack types.} Table~\ref{tab:pentest} lists five attack types,
+each derived from the threats of Annex~B, with the components most
+exposed to it. The gateway and the banking services (P3, P5) are the
+most sensitive components overall, since any enrolled device can reach
+them. P4 comes next, because one flaw there gives account takeover.
+The mobile application (P1) runs on a device the attacker may control,
+so its protections can only delay an attacker, and the backend must
+not trust any value that the application computes.
+
+\begin{table*}[!t]
+\caption{Penetration-testing plan: attack types, sensitive components, tools and pass criteria}
+\label{tab:pentest}
+\centering
+\scriptsize
+\begin{tabularx}{\textwidth}{@{}L{0.45cm}L{2.6cm}L{1.2cm}L{3.1cm}L{2.7cm}Y@{}}
+\toprule
+\textbf{ID} & \textbf{Attack type} & \textbf{Threats} & \textbf{Most sensitive components} & \textbf{Tools} & \textbf{Pass criterion (requirements)} \\
+\midrule
+A1 & Broken object-level authorisation and role confusion: change account, card or transaction identifiers; call back-office endpoints with a customer token & T14, T19 & P5 account, card and statement endpoints; P3 routing; back-office endpoints of P2 & Burp with Autorize, Python scripts with two customers & Every request for an object of another customer returns 403 or 404 with no data; no role reaches the endpoints of the other role (REQ-04, REQ-17) \\
+A2 & Authentication and session attacks: \ac{PIN} guessing, credential stuffing, token theft and replay, step-up bypass & T01, T02, T04, T17 & P4 \ac{IAM}; F3 token handling; P1 login flow & Burp Intruder at a limited rate, jwt\_tool, Frida & Lockout after five wrong \acp{PIN}; tokens older than 5~minutes or without proof of possession rejected; one factor never enough (REQ-13, REQ-15, REQ-16, REQ-21) \\
+A3 & Transaction tampering and replay: change amount or payee after signing, replay signed orders, reuse nonces & T06, T07, T10 & P1 signing code; F3; P5 transfer and MB~WAY services & Frida hooks on the signing call, Burp Repeater & Altered or replayed orders return 401 or 409 and leave balances unchanged (REQ-06, REQ-07) \\
+A4 & Channel interception and client hardening: user-installed CA, pinning bypass, repackaged application, data left on the device & T03, T12, T13 & P1; DS1 keystore; F3 & mitmproxy, objection, apktool, MobSF & No request is readable through the proxy without a pinning bypass; no token, key or account data outside the keystore; a repackaged build cannot enrol (REQ-01, REQ-03, REQ-15) \\
+A5 & Back-office abuse: freeze an account or open \ac{BtG} without a second Admin, approve one's own request, alter audit records, inject into search fields & T11, T20 & P2; P5 administrative services; DS3 audit log & Burp, sqlmap, direct database access granted for the test & Single-Admin actions refused; tampering breaks the hash chain; no injection reaches the database (REQ-09, REQ-18) \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\textbf{Staying within the authorised scope.} No test starts before the
+CISO and the PO sign the rules of engagement. This document names the
+testers, their source IP addresses, the time window, the staging host
+names and the hashes of the builds under test. It also lists what is out
+of scope: production, the core banking system and SIBS, the app-store
+accounts, real customers and staff (no social engineering in this
+engagement), and load above twice the \mbox{REQ-12} threshold. The
+gateway accepts test traffic only from the listed addresses, and the
+\ac{SIEM} team is told the window in advance, except for the
+\mbox{REQ-21} alert drill. Testers stop and report within one hour if a
+test reaches a system that is not on the list, exposes data that looks
+real, or degrades shared infrastructure. Critical findings go to the
+\ac{PSIRT} within 24~hours, and evidence is stored encrypted and deleted
+90~days after the final report. Under \ac{DORA} Art.~26, a bank that
+its competent authority identifies for it must also run threat-led
+penetration testing on live production systems at least every three
+years, following TIBER-EU~\cite{tibereu}. That test has its own control
+team and is outside this plan.
+
+\subsection{Fuzz-Testing Plan}
+
+\textbf{Strategy and tools.} Fuzzing is used at two levels, and both are
+coverage-guided or schema-guided rather than purely random~\cite{miller1990}.
+Inside the backend, Jazzer~\cite{jazzer} (Table~\ref{tab:lifecycle})
+fuzzes the JVM parsers and validators of orders, tokens and signatures
+in-process. Each target receives bytes from the fuzzer and calls one
+parser, and the seeds are valid requests captured from the functional
+test suite. Through the gateway, Schemathesis~\cite{schemathesis}
+generates requests from the OpenAPI description and chains them
+(login, token, transfer), so that the fuzzer reaches the transfer
+endpoints with a valid session. Native libraries of the mobile
+application, such as the QR-code decoder, are fuzzed with
+AFL++~\cite{aflpp2020} under AddressSanitizer, as in
+Section~\ref{sec:fuzzrun}.
+
+\textbf{Monitors.} A fuzzer finds crashes and memory faults, not logic
+flaws, so each campaign adds oracles that check the behaviour of the
+system: an uncaught exception or a sanitizer report; an HTTP~5xx or a
+stack trace in a response; a response slower than 2~seconds; a change
+in the total balance of the test accounts without an accepted signed
+order; data of another test customer in a response; and a break in the
+audit-log chain. Jazzer runs nightly for 8~hours per target, Schemathesis
+for 30~minutes on each staging build, and each crash becomes a
+regression test once it is fixed. Table~\ref{tab:fuzz} lists the ten
+attack vectors and the expected behaviour of the system for each one.
+
+\begin{table*}[!t]
+\caption{Fuzz-testing plan: attack vectors, example inputs and expected behaviour}
+\label{tab:fuzz}
+\centering
+\scriptsize
+\begin{tabularx}{\textwidth}{@{}L{0.8cm}L{2.6cm}L{5.0cm}YL{1.3cm}@{}}
+\toprule
+\textbf{ID} & \textbf{Vector (target)} & \textbf{Example inputs} & \textbf{Expected behaviour} & \textbf{REQ} \\
+\midrule
+FZ-01 & Amount field of transfers and MB~WAY payments (P5 order parser) & \texttt{-0.01}; \texttt{0.001}; \texttt{1e309}; \texttt{NaN}; \texttt{99999999999999999999.99}; \texttt{"12,50"} & 400 with a generic message; only positive decimals with two places and within the account limit are accepted; no debit and no 5xx & REQ-06, REQ-08 \\
+FZ-02 & Duplicate and conflicting JSON keys (P3 and P5 parsers) & \texttt{\{"amount":"10.00", "amount":"9000.00"\}}; the same key with different case & 400 at the gateway; the service never executes a value other than the one covered by the signature & REQ-06 \\
+FZ-03 & Nesting depth and body size (P3) & 10{,}000 nested arrays \texttt{[[[[...]]]]}; a 10~MB body; a 1~MB string value & 400 or 413 within 2~seconds; no stack overflow; other sessions keep their response times & REQ-11, REQ-12 \\
+FZ-04 & IBAN and payee name (P5 verification of payee) & \texttt{PT50} followed by 1{,}000 digits; IBAN with a NUL byte; name with U+202E (right-to-left override); Cyrillic homoglyphs in a known name & Malformed IBAN rejected with 400; names compared after Unicode normalisation; a non-matching name triggers the second confirmation & REQ-20 \\
+FZ-05 & Signature field (P5 signature check) & empty value; truncated DER; 1~MB of base64; a valid signature of another order; $r=0$ or $s=0$ & 401; no transfer; no exception reaches the logs as a stack trace & REQ-06 \\
+FZ-06 & Nonce, idempotency key and timestamp (P5) & reused nonce; \texttt{ts=0}; \texttt{ts=-1}; \texttt{ts=9223372036854775807}; \texttt{2026-12-31T23:59:60Z}; 10~kB idempotency key & 409 on reuse; 400 on malformed values; any timestamp older than 60~seconds or in the future rejected & REQ-07 \\
+FZ-07 & Access token and proof of possession (P4) & header with \texttt{"alg":"none"}; \texttt{"kid":"../../dev/null"}; 64~kB token; token expired by one second; missing or reused proof & 401 for all; no 5xx; no token accepted without a valid proof from the enrolled device & REQ-16, REQ-17 \\
+FZ-08 & Object identifiers in paths and bodies (P3, P5) & \texttt{0}; \texttt{-1}; \texttt{9223372036854775808}; \texttt{../}; \texttt{\%00}; identifier of the second test customer & 403 or 404; the oracle finds no IBAN or name of the other customer in any response & REQ-04 \\
+FZ-09 & \ac{PIN} entry and login (P4) & empty; five or seven digits; Arabic-Indic digits U+0661--U+0666; \texttt{000000} followed by a newline; 10~kB string & 400 or 401; every attempt counts towards the five-attempt lockout, whatever its encoding & REQ-13, REQ-15 \\
+FZ-10 & Deep links and QR payloads (P1 and its native decoder) & \texttt{securebank://transfer?}\allowbreak\texttt{amount=1e9\&auto=1}; QR with a TLV length of \texttt{0xFF} past the end; MB~WAY number \texttt{+351} followed by 4{,}000 digits & The application opens a pre-filled form that still needs biometrics or the \ac{PIN}; malformed codes rejected; no crash and no sanitizer report & REQ-06, REQ-15 \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\subsection{Requirement-to-Test Mapping}
+
+Table~\ref{tab:tests} maps each of the 23 requirements to at least one
+test with a unique identifier. Twenty-one test cases cover the catalogue.
+Three of them cover more than one requirement: TC-05 checks the three
+customer duties, TC-18 checks both the four-eyes rule and its audit
+records, and TC-21, the independent penetration test, re-runs attack
+types A1 to A5 and so repeats the checks of \mbox{REQ-01}, \mbox{REQ-04},
+\mbox{REQ-06} and \mbox{REQ-17}. The \emph{Link} column names the attack
+types and fuzz vectors that feed each test.
+
+\begin{table*}[!t]
+\caption{Requirement-to-test mapping (every requirement of Table~\ref{tab:req} has at least one test)}
+\label{tab:tests}
+\centering
+\scriptsize
+\begin{tabularx}{\textwidth}{@{}L{0.75cm}YL{2.3cm}L{1.35cm}L{1.35cm}L{1.9cm}@{}}
+\toprule
+\textbf{Test} & \textbf{Action and pass criterion} & \textbf{Technique} & \textbf{Link} & \textbf{When} & \textbf{Requirements} \\
+\midrule
+TC-01 & Route the application through a proxy with a user-installed CA, and through a server that offers only TLS~1.2: the application aborts both connections and sends no request. & Pentest & A4 & Each release & REQ-01 \\
+TC-02 & Restore a backup on an isolated host without \ac{HSM} access and read the database files: no account or personal field is readable; configuration shows AES-256-GCM with keys in the \ac{HSM}. & Inspection, review & -- & Yearly & REQ-02 \\
+TC-03 & Log in and make a transfer on a rooted device, then search the sandbox, logs and backups: no token, key or account data outside the keystore. & Pentest (MobSF, objection) & A4 & Each release & REQ-03 \\
+TC-04 & Customer A requests every account, card and transaction identifier of customer B on every endpoint: 403 or 404 and no data of B (Annex~\ref{ann:tc04}). & Pentest, fuzzing & A1, FZ-08 & Nightly (scripted) & REQ-04 \\
+TC-05 & Enrol a test customer and check the stored record: acceptance of the three duties, contract version and timestamp are present and cannot be skipped. & Functional, review & -- & Each release & REQ-05, REQ-19, REQ-22 \\
+TC-06 & Change amount, payee, timestamp or nonce after signing: 401 and balances unchanged. & Pentest, fuzzing & A3, FZ-01, FZ-02, FZ-05 & Nightly & REQ-06 \\
+TC-07 & Resend a signed order with the same nonce and idempotency key, and one signed 61~seconds earlier: 409 and 400; one debit only. & Pentest, boundary & A3, FZ-06 & Nightly & REQ-07 \\
+TC-08 & Stop P5 or drop F11 at each step of a transfer: no partial debit or credit; reconciliation finds no difference. & Fault injection & -- & Each release & REQ-08 \\
+TC-09 & Generate 1{,}000 events, then edit one record and delete another in DS3: chain verification fails exactly at those records; every record has actor, time, operation and outcome. & Functional, tampering & A5 & Each release & REQ-09 \\
+TC-10 & Deploy an unsigned artefact and one whose \ac{SBOM} signature does not match: no node accepts either. & Functional & -- & Each pipeline change & REQ-10 \\
+TC-11 & k6 with 1{,}000 sessions at 100 requests per second for 30~minutes: at least 99.9\% of valid requests complete within 2~seconds. & Load & FZ-03 & Each release & REQ-11 \\
+TC-12 & One device sends 20 requests per second for 60~seconds while 50 devices send normal traffic: the flooding device receives 429 above 10 per second; the others are not affected. & Load, boundary & -- & Each release & REQ-12 \\
+TC-13 & Enter four, then five wrong \acp{PIN}: the fifth blocks \ac{PIN} entry on that device; entry is still blocked at 14:59 and allowed at 15:00; matrix-card recovery works during the block. & Boundary & A2, FZ-09 & Nightly & REQ-13 \\
+TC-14 & Stop the primary data centre during a k6 run: transfers resume from the second region within 30~minutes; every committed transaction is present in both ledgers. & Failover drill & -- & Twice a year & REQ-14 \\
+TC-15 & Log in and transfer with the device key alone, the \ac{PIN} alone from a non-enrolled device, and biometrics without the key: all rejected; key with \ac{PIN} accepted. & Functional (negative), pentest & A2, FZ-10 & Nightly & REQ-15 \\
+TC-16 & Present a token at 4:59 and at 5:01 minutes, and from a second device without the key: accepted, rejected, rejected. & Boundary, pentest & A2, FZ-07 & Nightly & REQ-16 \\
+TC-17 & Call every back-office endpoint with a customer token and every payment endpoint with an Admin token: 403 for all. & Pentest (role matrix) & A1 & Nightly & REQ-17 \\
+TC-18 & An Admin freezes an account and opens \ac{BtG} alone, then approves their own request: refused; with a second Admin: accepted and logged with both identities. & Functional, pentest & A5 & Each release & REQ-18, REQ-09 \\
+TC-19 & Pay a new payee whose name does not match the verification of payee, including homoglyph names: second confirmation shown; a matching name shows none. & UI test & FZ-04 & Each release & REQ-20 \\
+TC-20 & Replay 25 failed logins in one minute from one source, then 20: the \ac{SIEM} alerts within 60~seconds for the first and not for the second. & Alert drill & A2 & Quarterly & REQ-21 \\
+TC-21 & Independent grey-box penetration test of A1 to A5 on the release candidate: no open critical or high finding, or residual risk signed by the PO. & Pentest & A1--A5 & Each major release & REQ-23, REQ-01, REQ-04, REQ-06, REQ-17 \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\textbf{Coverage and limits.} The tests marked \emph{nightly} run in the
+pipeline against staging, so a regression in access control, signatures
+or tokens is caught within a day. Some requirements cannot be fully
+tested. The customer duties (\mbox{REQ-05}, \mbox{REQ-19},
+\mbox{REQ-22}) are checked only through the enrolment records, since the
+plan cannot observe what a customer does outside the application.
+Ransomware (T18) is covered by the failover drill but not simulated with
+real malware, and staging uses a smaller \ac{HSM} and network than
+production, so TC-11 must be repeated on the production hardware before
+peak periods. Fuzzing covers the parsers well but finds an authorisation
+flaw only when an oracle checks for it, which is why FZ-08 and TC-04 share
+the same two test customers.
