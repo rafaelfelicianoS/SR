@@ -27,3 +27,9 @@
 !ex3/tools/afl-build.log
 !ex3/results/triage/min/*.tmin.log
 !ex3/screenshots/*.pdf
+ex3/bin/
+ex3/results/afl-*/
+
+# venv
+venv/
+*/venv/
