@@ -1,0 +1,31 @@
+[0;36mafl-tmin++5.04a[0m by Michal Zalewski
+
+[1;92m[+] [0mRead 35 bytes from '/home/popo-caca/Uni/4/SR/P/5/ex3/results/afl-1.7.10/default/crashes/id:000000,sig:06,src:000048,time:702,execs:30848,op:havoc,rep:6'.[0m
+[1;92m[+] [0m[1;95mPersistent mode binary detected.[0m
+[1;92m[+] [0m[1;95mDeferred forkserver binary detected.[0m
+[1;94m[*] [0mPerforming dry run (mem limit = 0 MB, timeout = 5000 ms)...[0m
+[1;92m[+] [0mProgram terminates normally, minimizing in [0;36minstrumented[0m mode.[0m
+[1;94m[*] [0m[1;97mStage #0: [0mOne-time block normalization...[0m
+[1;92m[+] [0mBlock normalization complete, 4 bytes replaced.[0m
+[1;94m[*] [0m[1;93m--- [1;97mPass #1 [1;93m---[0m
+[1;94m[*] [0m[1;97mStage #1: [0mRemoving blocks of data...[0m
+[1;90m    Block length = 2, remaining size = 35
+[0m[1;90m    Block length = 1, remaining size = 27
+[0m[1;92m[+] [0mBlock removal complete, 8 bytes deleted.[0m
+[1;94m[*] [0m[1;97mStage #2: [0mMinimizing symbols (9 code points)...[0m
+[1;92m[+] [0mSymbol minimization finished, 3 symbols (5 bytes) replaced.[0m
+[1;94m[*] [0m[1;97mStage #3: [0mCharacter minimization...[0m
+[1;92m[+] [0mCharacter minimization done, 0 bytes replaced.[0m
+[1;94m[*] [0m[1;93m--- [1;97mPass #2 [1;93m---[0m
+[1;94m[*] [0m[1;97mStage #1: [0mRemoving blocks of data...[0m
+[1;90m    Block length = 1, remaining size = 27
+[0m[1;92m[+] [0mBlock removal complete, 0 bytes deleted.[0m
+
+[1;90m     File size reduced by : [0m22.86% (to 27 bytes)
+[1;90m    Characters simplified : [0m33.33%
+[1;90m     Number of execs done : [0m71
+[1;90m          Fruitless execs : [0mpath=62 crash=0 hang=0
+
+[1;94m[*] [0mWriting output to '/home/popo-caca/Uni/4/SR/P/5/ex3/results/triage/min/crashes-id:000000.min'...[0m
+[1;92m[+] [0mWe're done here. Have a nice day!
+[0m

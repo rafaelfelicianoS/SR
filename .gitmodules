@@ -1,0 +1,7 @@
+[submodule "ex3/tools/AFLplusplus"]
+	path = ex3/tools/AFLplusplus
+	url = https://github.com/AFLplusplus/AFLplusplus.git
+	ignore = dirty
+[submodule "ex3/targets/cjson-src"]
+	path = ex3/targets/cjson-src
+	url = https://github.com/DaveGamble/cJSON.git

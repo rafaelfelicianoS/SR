@@ -22,3 +22,8 @@
 
 # Figures included by the paper
 !paper/figures/*.pdf
+
+# ex3: AFL++ evidence (logs and the coverage plot are part of the deliverable)
+!ex3/tools/afl-build.log
+!ex3/results/triage/min/*.tmin.log
+!ex3/screenshots/*.pdf

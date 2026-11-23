@@ -1,0 +1,115 @@
+[*] Compiling AFL++ for OS Linux on ARCH x86_64
+[+] ZLIB detected
+[*] Checking for the default compiler cc...
+[*] Testing the PATH environment variable...
+[*] Checking for the ability to compile x86 code...
+[+] shmat seems to be working.
+[+] Python 3.14.10 support seems to be working.
+[+] Everything seems to be working, ready to compile. (cc (GCC) 16.2.1 20260810)
+cc -O2 -Wno-format-truncation -g -Wno-pointer-sign -Wno-variadic-macros -Wall -Wextra -Wno-pointer-arith -fPIC -I include/ -DAFL_PATH=\"/usr/local/lib/afl\" -DBIN_PATH=\"/usr/local/bin\" -DDOC_PATH=\"/usr/local/share/doc/afl\" -flto -DHAVE_ZLIB -c src/afl-common.c -o src/afl-common.o
+cc -O2 -Wno-format-truncation -g -Wno-pointer-sign -Wno-variadic-macros -Wall -Wextra -Wno-pointer-arith -fPIC -I include/ -DAFL_PATH=\"/usr/local/lib/afl\" -DBIN_PATH=\"/usr/local/bin\" -DDOC_PATH=\"/usr/local/share/doc/afl\" -flto -DHAVE_ZLIB -c src/afl-sharedmem.c -o src/afl-sharedmem.o
+cc -O2 -Wno-format-truncation -g -Wno-pointer-sign -Wno-variadic-macros -Wall -Wextra -Wno-pointer-arith -fPIC -I include/ -DAFL_PATH=\"/usr/local/lib/afl\" -DBIN_PATH=\"/usr/local/bin\" -DDOC_PATH=\"/usr/local/share/doc/afl\" -flto -DHAVE_ZLIB -c src/afl-forkserver.c -o src/afl-forkserver.o
+cc -O2 -Wno-format-truncation -g -Wno-pointer-sign -Wno-variadic-macros -Wall -Wextra -Wno-pointer-arith -fPIC -I include/ -DAFL_PATH=\"/usr/local/lib/afl\" -DBIN_PATH=\"/usr/local/bin\" -DDOC_PATH=\"/usr/local/share/doc/afl\" -flto -Wno-format-truncation -DHAVE_ZLIB -Iinclude -c src/afl-performance.c -o src/afl-performance.o
+cc -O2 -Wno-format-truncation -g -Wno-pointer-sign -Wno-variadic-macros -Wall -Wextra -Wno-pointer-arith -fPIC -I include/ -DAFL_PATH=\"/usr/local/lib/afl\" -DBIN_PATH=\"/usr/local/bin\" -DDOC_PATH=\"/usr/local/share/doc/afl\"  -flto -DHAVE_ZLIB src/afl-fuzz-bitmap.c src/afl-fuzz.c src/afl-fuzz-cmplog.c src/afl-fuzz-coverage.c src/afl-fuzz-extras.c src/afl-fuzz-frameshift.c src/afl-fuzz-ijon.c src/afl-fuzz-init.c src/afl-fuzz-mopt-adaptive.c src/afl-fuzz-mutators.c src/afl-fuzz-one.c src/afl-fuzz-python.c src/afl-fuzz-queue.c src/afl-fuzz-redqueen.c src/afl-fuzz-run.c src/afl-fuzz-sanfuzz.c src/afl-fuzz-skipdet.c src/afl-fuzz-state.c src/afl-fuzz-stats.c src/afl-fuzz-statsd.c src/afl-fuzz-valprof.c src/afl-main.c src/afl-common.o src/afl-sharedmem.o src/afl-forkserver.o src/afl-performance.o -o afl-fuzz -DUSE_PYTHON -I/usr/include/python3.14 -I/usr/include/python3.14 -ldl -lrt -lm -lz -lpython3.14 -ldl  -lm   -L/usr/lib -lpython3.14 -ldl  -lm  -DPYTHON_VERSION="\"Python 3.14.10\"" -ldl -lrt -lm -lz -lm
+cc -O2 -Wno-format-truncation -g -Wno-pointer-sign -Wno-variadic-macros -Wall -Wextra -Wno-pointer-arith -fPIC -I include/ -DAFL_PATH=\"/usr/local/lib/afl\" -DBIN_PATH=\"/usr/local/bin\" -DDOC_PATH=\"/usr/local/share/doc/afl\"  -flto -DHAVE_ZLIB src/afl-showmap.c src/afl-fuzz-mutators.c src/afl-fuzz-python.c src/afl-common.o src/afl-sharedmem.o src/afl-forkserver.o src/afl-performance.o -o afl-showmap -DUSE_PYTHON -I/usr/include/python3.14 -I/usr/include/python3.14 -ldl -lrt -lm -lz -lpython3.14 -ldl  -lm   -L/usr/lib -lpython3.14 -ldl  -lm  -DPYTHON_VERSION="\"Python 3.14.10\"" -ldl -lrt -lm -lz
+cc -O2 -Wno-format-truncation -g -Wno-pointer-sign -Wno-variadic-macros -Wall -Wextra -Wno-pointer-arith -fPIC -I include/ -DAFL_PATH=\"/usr/local/lib/afl\" -DBIN_PATH=\"/usr/local/bin\" -DDOC_PATH=\"/usr/local/share/doc/afl\"   -c -o src/afl-fuzz-python.o src/afl-fuzz-python.c
+cc -O2 -Wno-format-truncation -g -Wno-pointer-sign -Wno-variadic-macros -Wall -Wextra -Wno-pointer-arith -fPIC -I include/ -DAFL_PATH=\"/usr/local/lib/afl\" -DBIN_PATH=\"/usr/local/bin\" -DDOC_PATH=\"/usr/local/share/doc/afl\"   -c -o src/afl-fuzz-mutators.o src/afl-fuzz-mutators.c
+cc -O2 -Wno-format-truncation -g -Wno-pointer-sign -Wno-variadic-macros -Wall -Wextra -Wno-pointer-arith -fPIC -I include/ -DAFL_PATH=\"/usr/local/lib/afl\" -DBIN_PATH=\"/usr/local/bin\" -DDOC_PATH=\"/usr/local/share/doc/afl\"  -flto -DHAVE_ZLIB src/afl-tmin.c src/afl-common.o src/afl-sharedmem.o src/afl-forkserver.o src/afl-performance.o src/afl-fuzz-python.o src/afl-fuzz-mutators.o -o afl-tmin -DUSE_PYTHON -I/usr/include/python3.14 -I/usr/include/python3.14 -ldl -lrt -lm -lz -lpython3.14 -ldl  -lm   -L/usr/lib -lpython3.14 -ldl  -lm  -DPYTHON_VERSION="\"Python 3.14.10\"" -ldl -lrt -lm -lz
+cc -O2 -Wno-format-truncation -g -Wno-pointer-sign -Wno-variadic-macros -Wall -Wextra -Wno-pointer-arith -fPIC -I include/ -DAFL_PATH=\"/usr/local/lib/afl\" -DBIN_PATH=\"/usr/local/bin\" -DDOC_PATH=\"/usr/local/share/doc/afl\"  -flto -DHAVE_ZLIB src/afl-gotcpu.c src/afl-common.o -o afl-gotcpu -ldl -lrt -lm -lz
+src/afl-gotcpu.c: In function ‘measure_preemption’:
+src/afl-gotcpu.c:94:20: warning: variable ‘v2’ set but not used [-Wunused-but-set-variable=]
+   94 |   volatile u32 v1, v2 = 0;
+      |                    ^~
+cc -O2 -Wno-format-truncation -g -Wno-pointer-sign -Wno-variadic-macros -Wall -Wextra -Wno-pointer-arith -fPIC -I include/ -DAFL_PATH=\"/usr/local/lib/afl\" -DBIN_PATH=\"/usr/local/bin\" -DDOC_PATH=\"/usr/local/share/doc/afl\"  -flto -DHAVE_ZLIB src/afl-analyze.c src/afl-common.o src/afl-sharedmem.o src/afl-performance.o src/afl-forkserver.o -o afl-analyze -ldl -lrt -lm -lz
+cc -O2 -Wno-format-truncation -g -Wno-pointer-sign -Wno-variadic-macros -Wall -Wextra -Wno-pointer-arith -fPIC -I include/ -DAFL_PATH=\"/usr/local/lib/afl\" -DBIN_PATH=\"/usr/local/bin\" -DDOC_PATH=\"/usr/local/share/doc/afl\"  -flto -DHAVE_ZLIB src/afl-cmin.c src/afl-common.o src/afl-sharedmem.o src/afl-forkserver.o src/afl-performance.o -o afl-cmin -DUSE_PYTHON -I/usr/include/python3.14 -I/usr/include/python3.14 -ldl -lrt -lm -lz -lpython3.14 -ldl  -lm   -L/usr/lib -lpython3.14 -ldl  -lm  -DPYTHON_VERSION="\"Python 3.14.10\"" -ldl -lrt -lm -lz -pthread
+ln -sf afl-cmin afl-merge
+make -j -f GNUmakefile.llvm
+make[1]: a entrar na pasta "/home/popo-caca/Uni/4/SR/P/5/ex3/tools/AFLplusplus"
+make[1]: aviso: -j0 forçado em submake: a repor modo jobserver.
+[+] llvm_mode detected llvm 16+, enabling c++17
+[+] llvm_mode detected llvm 12+, enabling afl-lto LTO implementation
+GNUmakefile.llvm:277: ld.lld not found, cannot enable LTO mode
+[-] not building LTO plugin
+[+] shmat seems to be working.
+/usr/bin/clang -O3 -funroll-loops -fPIC -Wall -g -Wno-cast-qual -Wno-variadic-macros -Wno-pointer-sign -I ./include/ -I ./instrumentation/ -DAFL_PATH=\"/usr/local/lib/afl\" -DBIN_PATH=\"/usr/local/bin\" -DLLVM_BINDIR=\"/usr/bin\" -DVERSION=\"++5.04a\" -DLLVM_LIBDIR=\"/usr/lib\" -DLLVM_VERSION=\"23.1.4\" -DAFL_CLANG_FLTO=\"-flto=full\" -DAFL_REAL_LD=\"\" -DAFL_CLANG_LDPATH=\"\" -DAFL_CLANG_FUSELD=\"\" -DCLANG_BIN=\"/usr/bin/clang\" -DCLANGPP_BIN=\"/usr/bin/clang++\" -DUSE_BINDIR=1 -Wno-unused-function -Wno-deprecated  -c src/afl-common.c -o instrumentation/afl-common.o -lrt
+[*] Checking for working 'llvm-config'...
+[*] Checking for working '/usr/bin/clang'...
+/usr/bin/clang -I/usr/include -I./../include -Wall -g -Wno-cast-qual -Wno-variadic-macros -Wno-pointer-sign -I ./include/ -I ./instrumentation/ -DAFL_PATH=\"/usr/local/lib/afl\" -DBIN_PATH=\"/usr/local/bin\" -DLLVM_BINDIR=\"/usr/bin\" -DVERSION=\"++5.04a\" -DLLVM_LIBDIR=\"/usr/lib\" -DLLVM_VERSION=\"23.1.4\" -DAFL_CLANG_FLTO=\"-flto=full\" -DAFL_REAL_LD=\"\" -DAFL_CLANG_LDPATH=\"\" -DAFL_CLANG_FUSELD=\"\" -DCLANG_BIN=\"/usr/bin/clang\" -DCLANGPP_BIN=\"/usr/bin/clang++\" -DUSE_BINDIR=1 -Wno-unused-function -Wno-deprecated  -O3 -Wno-unused-result -fPIC -c instrumentation/afl-compiler-rt.o.c -o afl-compiler-rt.o
+[*] Checking for matching versions of '/usr/bin/clang' and 'llvm-config'
+[*] We have llvm-config version 23.1.4 with a clang version 23.1.4, good.
+[*] Checking for './afl-showmap'...
+[*] Building 32-bit variant of the runtime (-m32)... clang: warning: -lrt: 'linker' input unused [-Wunused-command-line-argument]
+[+] All set and ready to build.
+[*] Building 64-bit variant of the runtime (-m64)... /usr/bin/clang++ -O3 -funroll-loops -fPIC -Wall -g -Wno-cast-qual -Wno-variadic-macros -Wno-pointer-sign -I ./include/ -I ./instrumentation/ -DAFL_PATH=\"/usr/local/lib/afl\" -DBIN_PATH=\"/usr/local/bin\" -DLLVM_BINDIR=\"/usr/bin\" -DVERSION=\"++5.04a\" -DLLVM_LIBDIR=\"/usr/lib\" -DLLVM_VERSION=\"23.1.4\" -DAFL_CLANG_FLTO=\"-flto=full\" -DAFL_REAL_LD=\"\" -DAFL_CLANG_LDPATH=\"\" -DAFL_CLANG_FUSELD=\"\" -DCLANG_BIN=\"/usr/bin/clang\" -DCLANGPP_BIN=\"/usr/bin/clang++\" -DUSE_BINDIR=1 -Wno-unused-function -Wno-deprecated -O3 -funroll-loops -fPIC -Wall -g -I ./include/ -DVERSION=\"++5.04a\" -Wno-variadic-macros -Wno-deprecated-copy-with-dtor -DLLVM_MINOR=1 -DLLVM_MAJOR=23  $(llvm-config --cxxflags) -fno-rtti -fPIC -std=c++17 -c instrumentation/afl-llvm-common.cc -o instrumentation/afl-llvm-common.o
+/usr/bin/clang -I/usr/include -I./../include -O3 -funroll-loops -fPIC -Wall -g -Wno-cast-qual -Wno-variadic-macros -Wno-pointer-sign -I ./include/ -I ./instrumentation/ -DAFL_PATH=\"/usr/local/lib/afl\" -DBIN_PATH=\"/usr/local/bin\" -DLLVM_BINDIR=\"/usr/bin\" -DVERSION=\"++5.04a\" -DLLVM_LIBDIR=\"/usr/lib\" -DLLVM_VERSION=\"23.1.4\" -DAFL_CLANG_FLTO=\"-flto=full\" -DAFL_REAL_LD=\"\" -DAFL_CLANG_LDPATH=\"\" -DAFL_CLANG_FUSELD=\"\" -DCLANG_BIN=\"/usr/bin/clang\" -DCLANGPP_BIN=\"/usr/bin/clang++\" -DUSE_BINDIR=1 -Wno-unused-function -Wno-deprecated  -DAFL_INCLUDE_PATH=\"/usr/local/include/afl\" src/afl-cc.c instrumentation/afl-common.o -o afl-cc -DLLVM_MINOR=1 -DLLVM_MAJOR=23 -lrt -DCFLAGS_OPT=\"\" -lm
+success!
+success!
+/usr/bin/clang++ $(llvm-config --cxxflags) -fno-rtti -fno-exceptions -fPIC -O3 -funroll-loops -fPIC -Wall -g -I ./include/ -DVERSION=\"++5.04a\" -Wno-variadic-macros -Wno-deprecated-copy-with-dtor -DLLVM_MINOR=1 -DLLVM_MAJOR=23  -Wno-deprecated-declarations -Wl,-znodelete -Wdeprecated -Wno-deprecated-copy-dtor -Wno-deprecated-copy-with-dtor -fno-rtti -fPIC -std=c++17 -shared instrumentation/afl-c11-pass.so.cc -o afl-c11-pass.so $(llvm-config --ldflags) -lrt instrumentation/afl-llvm-common.o
+/usr/bin/clang++ $(llvm-config --cxxflags) -fno-rtti -fno-exceptions -fPIC -O3 -funroll-loops -fPIC -Wall -g -I ./include/ -DVERSION=\"++5.04a\" -Wno-variadic-macros -Wno-deprecated-copy-with-dtor -DLLVM_MINOR=1 -DLLVM_MAJOR=23  -Wno-deprecated-declarations -Wl,-znodelete -Wdeprecated -Wno-deprecated-copy-dtor -Wno-deprecated-copy-with-dtor -fno-rtti -fPIC -std=c++17 -shared instrumentation/afl-llvm-ijon-pass.so.cc -o afl-llvm-ijon-pass.so $(llvm-config --ldflags) -lrt instrumentation/afl-llvm-common.o
+/usr/bin/clang++ $(llvm-config --cxxflags) -fno-rtti -fno-exceptions -fPIC -O3 -funroll-loops -fPIC -Wall -g -I ./include/ -DVERSION=\"++5.04a\" -Wno-variadic-macros -Wno-deprecated-copy-with-dtor -DLLVM_MINOR=1 -DLLVM_MAJOR=23  -Wno-deprecated-declarations -Wl,-znodelete -fno-rtti -fPIC -std=c++17 -shared instrumentation/SanitizerCoveragePCGUARD.so.cc -o SanitizerCoveragePCGUARD.so $(llvm-config --ldflags) -lrt -Wdeprecated -Wno-deprecated-copy-dtor -Wno-deprecated-copy-with-dtor instrumentation/afl-llvm-common.o
+/usr/bin/clang++ $(llvm-config --cxxflags) -fno-rtti -fno-exceptions -fPIC -O3 -funroll-loops -fPIC -Wall -g -I ./include/ -DVERSION=\"++5.04a\" -Wno-variadic-macros -Wno-deprecated-copy-with-dtor -DLLVM_MINOR=1 -DLLVM_MAJOR=23  -Wno-deprecated-declarations -Wl,-znodelete -shared instrumentation/split-compares-pass.so.cc -o split-compares-pass.so $(llvm-config --ldflags) -lrt instrumentation/afl-llvm-common.o
+/usr/bin/clang++ $(llvm-config --cxxflags) -fno-rtti -fno-exceptions -fPIC -O3 -funroll-loops -fPIC -Wall -g -I ./include/ -DVERSION=\"++5.04a\" -Wno-variadic-macros -Wno-deprecated-copy-with-dtor -DLLVM_MINOR=1 -DLLVM_MAJOR=23  -Wno-deprecated-declarations -Wl,-znodelete -shared instrumentation/split-switches-pass.so.cc -o split-switches-pass.so $(llvm-config --ldflags) -lrt instrumentation/afl-llvm-common.o
+/usr/bin/clang++ $(llvm-config --cxxflags) -fno-rtti -fno-exceptions -fPIC -O3 -funroll-loops -fPIC -Wall -g -I ./include/ -DVERSION=\"++5.04a\" -Wno-variadic-macros -Wno-deprecated-copy-with-dtor -DLLVM_MINOR=1 -DLLVM_MAJOR=23  -Wno-deprecated-declarations -Wl,-znodelete -shared instrumentation/cmplog-routines-pass.cc -o cmplog-routines-pass.so $(llvm-config --ldflags) -lrt instrumentation/afl-llvm-common.o
+/usr/bin/clang++ $(llvm-config --cxxflags) -fno-rtti -fno-exceptions -fPIC -O3 -funroll-loops -fPIC -Wall -g -I ./include/ -DVERSION=\"++5.04a\" -Wno-variadic-macros -Wno-deprecated-copy-with-dtor -DLLVM_MINOR=1 -DLLVM_MAJOR=23  -Wno-deprecated-declarations -Wl,-znodelete -shared instrumentation/cmplog-instructions-pass.cc -o cmplog-instructions-pass.so $(llvm-config --ldflags) -lrt instrumentation/afl-llvm-common.o
+/usr/bin/clang++ $(llvm-config --cxxflags) -fno-rtti -fno-exceptions -fPIC -O3 -funroll-loops -fPIC -Wall -g -I ./include/ -DVERSION=\"++5.04a\" -Wno-variadic-macros -Wno-deprecated-copy-with-dtor -DLLVM_MINOR=1 -DLLVM_MAJOR=23  -Wno-deprecated-declarations -Wl,-znodelete -shared instrumentation/cmplog-switches-pass.cc -o cmplog-switches-pass.so $(llvm-config --ldflags) -lrt instrumentation/afl-llvm-common.o
+/usr/bin/clang++ $(llvm-config --cxxflags) -fno-rtti -fno-exceptions -fPIC -O3 -funroll-loops -fPIC -Wall -g -I ./include/ -DVERSION=\"++5.04a\" -Wno-variadic-macros -Wno-deprecated-copy-with-dtor -DLLVM_MINOR=1 -DLLVM_MAJOR=23  -Wno-deprecated-declarations -Wl,-znodelete -shared instrumentation/afl-llvm-dict2file.so.cc -o afl-llvm-dict2file.so $(llvm-config --ldflags) -lrt instrumentation/afl-llvm-common.o
+/usr/bin/clang++ $(llvm-config --cxxflags) -fno-rtti -fno-exceptions -fPIC -O3 -funroll-loops -fPIC -Wall -g -I ./include/ -DVERSION=\"++5.04a\" -Wno-variadic-macros -Wno-deprecated-copy-with-dtor -DLLVM_MINOR=1 -DLLVM_MAJOR=23  -Wno-deprecated-declarations -Wl,-znodelete -shared instrumentation/compare-transform-pass.so.cc -o compare-transform-pass.so $(llvm-config --ldflags) -lrt instrumentation/afl-llvm-common.o
+/usr/bin/clang++ $(llvm-config --cxxflags) -fno-rtti -fno-exceptions -fPIC -O3 -funroll-loops -fPIC -Wall -g -I ./include/ -DVERSION=\"++5.04a\" -Wno-variadic-macros -Wno-deprecated-copy-with-dtor -DLLVM_MINOR=1 -DLLVM_MAJOR=23  -Wno-deprecated-declarations -Wl,-znodelete -shared instrumentation/injection-pass.cc -o injection-pass.so $(llvm-config --ldflags) -lrt instrumentation/afl-llvm-common.o
+/usr/bin/clang++ $(llvm-config --cxxflags) -fno-rtti -fno-exceptions -fPIC -O3 -funroll-loops -fPIC -Wall -g -I ./include/ -DVERSION=\"++5.04a\" -Wno-variadic-macros -Wno-deprecated-copy-with-dtor -DLLVM_MINOR=1 -DLLVM_MAJOR=23  -Wno-deprecated-declarations -Wl,-znodelete -shared instrumentation/afl-llvm-bug-pass.so.cc -o afl-llvm-bug-pass.so $(llvm-config --ldflags) -lrt instrumentation/afl-llvm-common.o
+[*] Testing the CC wrapper and instrumentation output...
+unset AFL_USE_ASAN AFL_USE_MSAN AFL_INST_RATIO AFL_LLVM_ALLOWLIST AFL_LLVM_DENYLIST; ASAN_OPTIONS=detect_leaks=0 AFL_QUIET=1 AFL_PATH=. AFL_LLVM_LAF_ALL=1 ./afl-cc -O3 -funroll-loops -fPIC -Wall -g -Wno-cast-qual -Wno-variadic-macros -Wno-pointer-sign -I ./include/ -I ./instrumentation/ -DAFL_PATH=\"/usr/local/lib/afl\" -DBIN_PATH=\"/usr/local/bin\" -DLLVM_BINDIR=\"/usr/bin\" -DVERSION=\"++5.04a\" -DLLVM_LIBDIR=\"/usr/lib\" -DLLVM_VERSION=\"23.1.4\" -DAFL_CLANG_FLTO=\"-flto=full\" -DAFL_REAL_LD=\"\" -DAFL_CLANG_LDPATH=\"\" -DAFL_CLANG_FUSELD=\"\" -DCLANG_BIN=\"/usr/bin/clang\" -DCLANGPP_BIN=\"/usr/bin/clang++\" -DUSE_BINDIR=1 -Wno-unused-function -Wno-deprecated  ./test-instr.c -o test-instr -lrt
+ASAN_OPTIONS=detect_leaks=0 ./afl-showmap -m none -q -o .test-instr0 ./test-instr < /dev/null
+echo 1 | ASAN_OPTIONS=detect_leaks=0 ./afl-showmap -m none -q -o .test-instr1 ./test-instr
+[+] All right, the instrumentation seems to be working!
+[+] All done! You can now use './afl-cc' to compile programs.
+make[1]: a sair da pasta "/home/popo-caca/Uni/4/SR/P/5/ex3/tools/AFLplusplus"
+make -f GNUmakefile.gcc_plugin
+make[1]: a entrar na pasta "/home/popo-caca/Uni/4/SR/P/5/ex3/tools/AFLplusplus"
+[*] Checking for working 'cc'...
+[+] shmat seems to be working.
+[*] Checking for gcc plugin development header files...
+[*] Checking for './afl-showmap'...
+[+] All set and ready to build.
+g++ -O3 -g -funroll-loops  -Wall -std=c++11 -fPIC -fno-rtti -fno-exceptions -I"/usr/lib/gcc/x86_64-pc-linux-gnu/16/plugin"/include -I"/usr/lib/gcc/x86_64-pc-linux-gnu/16/plugin" -shared instrumentation/afl-gcc-pass.so.cc -o afl-gcc-pass.so -lrt
+g++ -O3 -g -funroll-loops  -Wall -std=c++11 -fPIC -fno-rtti -fno-exceptions -I"/usr/lib/gcc/x86_64-pc-linux-gnu/16/plugin"/include -I"/usr/lib/gcc/x86_64-pc-linux-gnu/16/plugin" -shared instrumentation/afl-gcc-cmplog-pass.so.cc -o afl-gcc-cmplog-pass.so
+g++ -O3 -g -funroll-loops  -Wall -std=c++11 -fPIC -fno-rtti -fno-exceptions -I"/usr/lib/gcc/x86_64-pc-linux-gnu/16/plugin"/include -I"/usr/lib/gcc/x86_64-pc-linux-gnu/16/plugin" -shared instrumentation/afl-gcc-cmptrs-pass.so.cc -o afl-gcc-cmptrs-pass.so
+ln -sf afl-cc afl-gcc-fast
+ln -sf afl-cc afl-g++-fast
+ln -sf afl-cc.8 afl-gcc-fast.8
+ln -sf afl-cc.8 afl-g++-fast.8
+[*] Testing the CC wrapper and instrumentation output...
+unset AFL_USE_ASAN AFL_USE_MSAN AFL_LLVM_ALLOWLIST AFL_LLVM_DENYLIST; ASAN_OPTIONS=detect_leaks=0 AFL_QUIET=1 AFL_INST_RATIO=100 AFL_PATH=. AFL_CC=cc ./afl-gcc-fast -O3 -g -funroll-loops -Wall -Iinclude -Wno-pointer-sign -DAFL_PATH=\"/usr/local/lib/afl\" -DBIN_PATH=\"/usr/local/bin\" -DGCC_VERSION=\"\" -DGCC_BINDIR=\"\" -Wno-unused-function  ./test-instr.c -o test-instr -lrt
+ASAN_OPTIONS=detect_leaks=0 ./afl-showmap -m none -q -o .test-instr0 ./test-instr </dev/null
+echo 1 | ASAN_OPTIONS=detect_leaks=0 ./afl-showmap -m none -q -o .test-instr1 ./test-instr
+[+] All right, the instrumentation seems to be working!
+[+] All done! You can now use './afl-gcc-fast' to compile programs.
+make[1]: a sair da pasta "/home/popo-caca/Uni/4/SR/P/5/ex3/tools/AFLplusplus"
+[*] Testing the CC wrapper afl-cc and its instrumentation output...
+ASAN_OPTIONS=detect_leaks=0 ./afl-showmap -q -m none -o .test-instr0 ./test-instr < /dev/null
+echo 1 | ASAN_OPTIONS=detect_leaks=0 ./afl-showmap -m none -q -o .test-instr1 ./test-instr
+
+[+] All right, the instrumentation of afl-cc seems to be working!
+[+] Main compiler 'afl-cc' successfully built!
+[+] LLVM mode for 'afl-cc' successfully built!
+[-] LLVM LTO mode for 'afl-cc'  failed to build, this would need LLVM 11+, see instrumentation/README.lto.md how to build it
+[+] gcc_plugin for 'afl-cc' successfully built!
+[+] All done! Be sure to review the README.md - it's pretty short and useful.
+make -C utils/aflpp_driver
+make[1]: a entrar na pasta "/home/popo-caca/Uni/4/SR/P/5/ex3/tools/AFLplusplus/utils/aflpp_driver"
+/usr/bin/clang -I. -I../../include -O3 -funroll-loops -g -fPIC -fno-lto -c aflpp_driver.c
+/usr/bin/clang -O3 -funroll-loops -g -fPIC -fno-lto -O0 -funroll-loops -c aflpp_qemu_driver.c
+Note: Optional aflpp_qemu_driver_hook.o not built.
+Note: Optional aflpp_qemu_driver_hook.so not built.
+'libAFLQemuDriver.a' -> '../../libAFLQemuDriver.a'
+'libAFLDriver.a' -> '../../libAFLDriver.a'
+make[1]: a sair da pasta "/home/popo-caca/Uni/4/SR/P/5/ex3/tools/AFLplusplus/utils/aflpp_driver"
+
+
+
+
+Build Summary:
+[+] afl-fuzz and supporting tools successfully built
+[+] LLVM mode successfully built
+[-] LLVM LTO mode could not be built, it is optional, if you want it, please install LLVM and LLD 11+. More information at instrumentation/README.lto.md on how to build it
+[+] gcc_mode successfully built
+

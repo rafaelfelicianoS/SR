@@ -1,0 +1,34 @@
+                                                                                                    
+       american fuzzy lop ++5.04a {default} (bin/fuzz-1.7.10) [explore]                             
+┌─ process timing ────────────────────────────────────┬─ overall results ────┐                      
+│        run time : 0 days, 0 hrs, 14 min, 33 sec     │  cycles done : 30    │                      
+│   last new find : 0 days, 0 hrs, 0 min, 0 sec       │ corpus count : 476   │                      
+│last saved crash : 0 days, 0 hrs, 4 min, 17 sec      │saved crashes : 68    │                      
+│ last saved hang : none seen yet                     │  saved hangs : 0     │                      
+├─ cycle progress ─────────────────────┬─ map coverage┴──────────────────────┤                      
+│  now processing : 471*0 (98.9%)      │    map density : 8.98% / 21.02%     │                      
+│  runs timed out : 0 (0.00%)          │ count coverage : 6.20 bits/tuple    │                      
+├─ stage progress ─────────────────────┼─ findings in depth ─────────────────┤                      
+│  now trying : havoc                  │ favored items : 65 (13.66%)         │                      
+│ stage execs : 0/1200 (0.00%)         │  new edges on : 89 (18.70%)         │                      
+│ total execs : 2.66M                  │ total crashes : 1775 (68 saved)     │                      
+│  exec speed : 25.1k/sec              │  total tmouts : 24.2k (0 saved)     │                      
+├─ fuzzing strategy yields ────────────┴─────────────┬─ item geometry ───────┤                      
+│   bit flips : 0/448, 0/447, 0/445                  │    levels : 17        │                      
+│  byte flips : 0/56, 0/55, 0/53                     │   pending : 6         │                      
+│ arithmetics : 0/3906, 0/7628, 0/7420               │  pend fav : 0         │                      
+│  known ints : 0/497, 0/2058, 0/2968                │ own finds : 463       │                      
+│  dictionary : 0/2059, 0/2109, 0/0, 0/0             │  imported : 0         │                      
+│havoc/splice : 485/2.40M, 0/0                       │ stability : 100.00%   │                      
+│py/custom/rq : unused, unused, unused, unused       ├───────────────────────┘                      
+│    trim/eff : 21.28%/68.0k, 98.21%                 │          [cpu013: 37%]                       
+└─ strategy: explore ────────── state: in progress ──┘                                              
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    

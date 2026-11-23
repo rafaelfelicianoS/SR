@@ -1,0 +1,52 @@
+=================================================================
+==383968==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x7b7b3ede00db at pc 0x55e0263ddccd bp 0x7ffdbc79c560 sp 0x7ffdbc79c558
+READ of size 1 at 0x7b7b3ede00db thread T0
+    #0 0x55e0263ddccc in cJSON_Minify /home/popo-caca/Uni/4/SR/P/5/ex3/targets/cjson-1.7.10/cJSON.c:2642:12
+    #1 0x55e0263cef3e in LLVMFuzzerTestOneInput /home/popo-caca/Uni/4/SR/P/5/ex3/harness/cjson_read_fuzzer.c:64:9
+    #2 0x55e0263cf3df in main /home/popo-caca/Uni/4/SR/P/5/ex3/harness/fuzz_main.c:48:11
+    #3 0x7f0b3fc27780 in __libc_start_call_main /usr/src/debug/glibc/glibc/csu/../sysdeps/nptl/libc_start_call_main.h:59:16
+    #4 0x7f0b3fc278b8 in __libc_start_main /usr/src/debug/glibc/glibc/csu/../csu/libc-start.c:372:3
+    #5 0x55e0262d7104 in _start (/home/popo-caca/Uni/4/SR/P/5/ex3/bin/repro-1.7.10+0x36104) (BuildId: db0d3410b5e8538845e19afc23d689fa423312ca)
+
+0x7b7b3ede00db is located 0 bytes after 75-byte region [0x7b7b3ede0090,0x7b7b3ede00db)
+allocated by thread T0 here:
+    #0 0x55e02638a4d4 in malloc (/home/popo-caca/Uni/4/SR/P/5/ex3/bin/repro-1.7.10+0xe94d4) (BuildId: db0d3410b5e8538845e19afc23d689fa423312ca)
+    #1 0x55e0263cef11 in LLVMFuzzerTestOneInput /home/popo-caca/Uni/4/SR/P/5/ex3/harness/cjson_read_fuzzer.c:59:34
+    #2 0x55e0263cf3df in main /home/popo-caca/Uni/4/SR/P/5/ex3/harness/fuzz_main.c:48:11
+    #3 0x7f0b3fc27780 in __libc_start_call_main /usr/src/debug/glibc/glibc/csu/../sysdeps/nptl/libc_start_call_main.h:59:16
+    #4 0x7f0b3fc278b8 in __libc_start_main /usr/src/debug/glibc/glibc/csu/../csu/libc-start.c:372:3
+    #5 0x55e0262d7104 in _start (/home/popo-caca/Uni/4/SR/P/5/ex3/bin/repro-1.7.10+0x36104) (BuildId: db0d3410b5e8538845e19afc23d689fa423312ca)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /home/popo-caca/Uni/4/SR/P/5/ex3/targets/cjson-1.7.10/cJSON.c:2642:12 in cJSON_Minify
+Shadow bytes around the buggy address:
+  0x7b7b3eddfe00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7b7b3eddfe80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7b7b3eddff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7b7b3eddff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7b7b3ede0000: fa fa fa fa 00 00 00 00 00 00 00 00 00 03 fa fa
+=>0x7b7b3ede0080: fa fa 00 00 00 00 00 00 00 00 00[03]fa fa fa fa
+  0x7b7b3ede0100: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x7b7b3ede0180: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x7b7b3ede0200: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x7b7b3ede0280: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x7b7b3ede0300: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==383968==ABORTING
